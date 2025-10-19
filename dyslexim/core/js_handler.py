@@ -1,4 +1,3 @@
-
 # dyslexim/core/js_handler.py
 
 def get_js_gaze_handler(highlight_color, font, alignment):
@@ -9,6 +8,8 @@ def get_js_gaze_handler(highlight_color, font, alignment):
       window.__dyslexim_handler_installed = true;
       window.__dyslexim_prevEl = null;
       let debounceTimeout;
+
+      const TEXT_TAGS = ['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'SPAN', 'A', 'LI', 'TD', 'TH', 'CAPTION', 'PRE', 'CODE', 'BLOCKQUOTE'];
 
       function debounce(func, delay) {{
           return function(...args) {{
@@ -25,11 +26,15 @@ def get_js_gaze_handler(highlight_color, font, alignment):
           const y = Math.round(Math.max(0, Math.min(1, normY)) * h);
 
           let el = document.elementFromPoint(x, y);
-          if (!el || el.tagName === 'BODY' || el.tagName === 'HTML') {{
-            const els = document.elementsFromPoint(x+6, y) || [];
-            el = els[0] || null;
-          }}
+
           if (!el || el.tagName === 'BODY' || el.tagName === 'HTML') return;
+
+          // Traverse up to find a text element if the current element is not one
+          if (!TEXT_TAGS.includes(el.tagName)) {{
+              el = el.closest(TEXT_TAGS.map(t => t.toLowerCase()).join(','));
+          }}
+
+          if (!el) return;
 
           if (window.__dyslexim_prevEl === el) return;
 
@@ -45,23 +50,19 @@ def get_js_gaze_handler(highlight_color, font, alignment):
           }}
 
           el.classList.add('__dyslexim_highlight');
-          const tag = el.tagName ? el.tagName.toLowerCase() : '';
-          const textLike = tag === 'p' || tag === 'span' || tag === 'div' || el.closest('article') || el.closest('p');
-          if (textLike) {{
-            el.__dyslexim_prevStyles = {{
-              lineHeight: el.style.lineHeight || '',
-              letterSpacing: el.style.letterSpacing || '',
-              backgroundColor: el.style.backgroundColor || '',
-              fontFamily: el.style.fontFamily || '',
-              textAlign: el.style.textAlign || ''
-            }};
-            el.style.transition = 'all 0.12s ease';
-            el.style.lineHeight = '1.8';
-            el.style.letterSpacing = '0.04em';
-            el.style.backgroundColor = 'rgba(255,255,0,0.03)';
-            el.style.fontFamily = `'{font}'`;
-            el.style.textAlign = '{alignment}';
-          }}
+          el.__dyslexim_prevStyles = {{
+            lineHeight: el.style.lineHeight || '',
+            letterSpacing: el.style.letterSpacing || '',
+            backgroundColor: el.style.backgroundColor || '',
+            fontFamily: el.style.fontFamily || '',
+            textAlign: el.style.textAlign || ''
+          }};
+          el.style.transition = 'all 0.12s ease';
+          el.style.lineHeight = '1.8';
+          el.style.letterSpacing = '0.04em';
+          el.style.backgroundColor = 'rgba(255,255,0,0.03)';
+          el.style.fontFamily = `'{font}'`;
+          el.style.textAlign = '{alignment}';
 
           const rect = el.getBoundingClientRect();
           if (rect.top < 24 || rect.bottom > h - 24) {{
