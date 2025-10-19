@@ -3,4 +3,4 @@
 .idea/misc.xml
 .idea
 dyslexim\build\main
-dyslexim\core\__pycache__
+dyslexim/core/__pycache__/
