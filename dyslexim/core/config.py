@@ -59,5 +59,5 @@ HOME_URL = "file:///" + get_asset_path('home.html').replace('\\', '/')
 # Small delay in milliseconds before injecting the gaze handler after a page load
 INJECT_DELAY_MS = 220
 
-# Frequency of gaze updates in milliseconds (e.g., 50ms = 20Hz)
-GAZE_UPDATE_INTERVAL_MS = 50
+# Frequency of gaze updates in milliseconds (e.g., 100ms = 10Hz)
+GAZE_UPDATE_INTERVAL_MS = 100
