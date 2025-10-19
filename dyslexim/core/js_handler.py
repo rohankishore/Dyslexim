@@ -1,3 +1,4 @@
+
 # dyslexim/core/js_handler.py
 
 def get_js_gaze_handler(highlight_color, font, alignment):
@@ -94,3 +95,26 @@ def get_js_gaze_handler(highlight_color, font, alignment):
 
     }})();
     """
+
+def get_focus_mode_js(is_enabled):
+    """Returns JavaScript to toggle focus mode (removing/restoring styles)."""
+    if is_enabled:
+        return """
+        (function() {
+            document.querySelectorAll('style, link[rel="stylesheet"]').forEach(el => {
+                if (el.getAttribute('data-dyslexim') !== '1') {
+                    el.setAttribute('data-dyslexim-disabled', 'true');
+                    el.disabled = true;
+                }
+            });
+        })();
+        """
+    else:
+        return """
+        (function() {
+            document.querySelectorAll('[data-dyslexim-disabled="true"]').forEach(el => {
+                el.disabled = false;
+                el.removeAttribute('data-dyslexim-disabled');
+            });
+        })();
+        """
