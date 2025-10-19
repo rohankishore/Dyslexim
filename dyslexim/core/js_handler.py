@@ -1,7 +1,8 @@
+
 # dyslexim/core/js_handler.py
 
-def get_js_gaze_handler(highlight_color):
-    """Returns the JavaScript gaze handler with the specified highlight color."""
+def get_js_gaze_handler(highlight_color, font, alignment):
+    """Returns the JavaScript gaze handler with the specified highlight color, font, and alignment."""
     return f"""
     (function(){{
       if (window.__dyslexim_handler_installed) return;
@@ -46,12 +47,16 @@ def get_js_gaze_handler(highlight_color):
             el.__dyslexim_prevStyles = {{
               lineHeight: el.style.lineHeight || '',
               letterSpacing: el.style.letterSpacing || '',
-              backgroundColor: el.style.backgroundColor || ''
+              backgroundColor: el.style.backgroundColor || '',
+              fontFamily: el.style.fontFamily || '',
+              textAlign: el.style.textAlign || ''
             }};
             el.style.transition = 'all 0.12s ease';
             el.style.lineHeight = '1.8';
             el.style.letterSpacing = '0.04em';
             el.style.backgroundColor = 'rgba(255,255,0,0.03)';
+            el.style.fontFamily = '{font}';
+            el.style.textAlign = '{alignment}';
           }}
 
           // auto-scroll into view if off-screen
