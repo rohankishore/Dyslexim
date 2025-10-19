@@ -1,6 +1,6 @@
 {
   "highlightColor": "#ffc800",
   "onboarding_complete": true,
-  "font": "Roboto",
-  "highlightAlignment": "right"
+  "font": "OpenDyslexic",
+  "highlightAlignment": "left"
 }
