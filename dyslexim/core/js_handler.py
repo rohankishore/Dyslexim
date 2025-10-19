@@ -115,24 +115,24 @@ def get_js_gaze_handler(highlight_color, font, alignment, reading_mask, tts_hove
 
       window.__dyslexim_handleGaze = debounce(handleGaze, 50);
 
-      window.__dyslexim_clearHighlight = function() {
-        if (window.__dyslexim_prevEl) {
+      window.__dyslexim_clearHighlight = function() {{
+        if (window.__dyslexim_prevEl) {{
           window.__dyslexim_prevEl.classList.remove('__dyslexim_highlight');
-          if (window.__dyslexim_prevEl.__dyslexim_prevStyles) {
+          if (window.__dyslexim_prevEl.__dyslexim_prevStyles) {{
             const prev = window.__dyslexim_prevEl.__dyslexim_prevStyles;
-            for (const k in prev) {
+            for (const k in prev) {{
               window.__dyslexim_prevEl.style[k] = prev[k];
-            }
+            }}
             window.__dyslexim_prevEl.__dyslexim_prevStyles = null;
-          }
-        }
+          }}
+        }}
         let readingMask = document.getElementById('__dyslexim_reading_mask');
-        if (readingMask) {
+        if (readingMask) {{
           readingMask.remove();
-        }
+        }}
         speechSynthesis.cancel();
         window.__dyslexim_prevEl = null;
-      };
+      }};
 
       (function() {{
         const style = document.createElement('style');
