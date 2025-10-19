@@ -1,4 +1,3 @@
-
 # dyslexim/core/js_handler.py
 
 def get_js_gaze_handler(highlight_color, font, alignment):
@@ -62,7 +61,7 @@ def get_js_gaze_handler(highlight_color, font, alignment):
           // auto-scroll into view if off-screen
           const rect = el.getBoundingClientRect();
           if (rect.top < 24 || rect.bottom > h - 24) {{
-            el.scrollIntoView({{{{behavior:'smooth', block:'center'}}}});
+            el.scrollIntoView({{behavior:'smooth', block:'center'}});
           }}
 
           window.__dyslexim_prevEl = el;
