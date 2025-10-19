@@ -1,3 +1,4 @@
+
 # dyslexim/core/js_handler.py
 
 def get_js_gaze_handler(highlight_color, font, alignment):
@@ -5,7 +6,7 @@ def get_js_gaze_handler(highlight_color, font, alignment):
     return f"""
     (function(){{
       if (window.__dyslexim_handler_installed) return;
-      window.__dyslexim_handler_installed = True;
+      window.__dyslexim_handler_installed = true;
       window.__dyslexim_prevEl = null;
 
       window.__dyslexim_handleGaze = function(normX, normY) {{
