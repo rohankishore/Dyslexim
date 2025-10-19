@@ -1,7 +1,6 @@
-
 # dyslexim/core/js_handler.py
 
-def get_js_gaze_handler(highlight_color, font, alignment):
+def get_js_gaze_handler(highlight_color, font, alignment, reading_mask):
     """Returns the JavaScript gaze handler with the specified highlight color, font, and alignment."""
     return f"""
     (function(){{
@@ -30,7 +29,6 @@ def get_js_gaze_handler(highlight_color, font, alignment):
 
           if (!el || el.tagName === 'BODY' || el.tagName === 'HTML') return;
 
-          // Traverse up to find a text element if the current element is not one
           if (!TEXT_TAGS.includes(el.tagName)) {{
               el = el.closest(TEXT_TAGS.map(t => t.toLowerCase()).join(','));
           }}
@@ -66,6 +64,33 @@ def get_js_gaze_handler(highlight_color, font, alignment):
           el.style.textAlign = '{alignment}';
 
           const rect = el.getBoundingClientRect();
+          if ({str(reading_mask).lower()}) {{
+            let readingMask = document.getElementById('__dyslexim_reading_mask');
+            if (!readingMask) {{
+                readingMask = document.createElement('div');
+                readingMask.id = '__dyslexim_reading_mask';
+                readingMask.style.position = 'fixed';
+                readingMask.style.top = '0';
+                readingMask.style.left = '0';
+                readingMask.style.width = '100vw';
+                readingMask.style.height = '100vh';
+                readingMask.style.pointerEvents = 'none';
+                readingMask.style.zIndex = '999999';
+                readingMask.style.transition = 'all 0.2s ease-in-out';
+                readingMask.style.boxShadow = '0 0 0 9999px rgba(0,0,0,0.7)';
+                readingMask.style.backdropFilter = 'blur(5px)';
+                document.body.appendChild(readingMask);
+            }}
+            const padding = 10;
+            readingMask.style.clipPath = `inset(${{rect.top - padding}}px 0 ${{h - (rect.bottom + padding)}}px 0)`;
+
+          }} else {{
+            let readingMask = document.getElementById('__dyslexim_reading_mask');
+            if (readingMask) {{
+                readingMask.remove();
+            }}
+          }}
+
           if (rect.top < 24 || rect.bottom > h - 24) {{
             el.scrollIntoView({{behavior:'smooth', block:'center'}});
           }}
