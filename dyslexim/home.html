@@ -1,10 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome to Dyslexim</title>
+    <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 
@@ -110,12 +110,16 @@
     </div>
 
     <script>
+        new QWebChannel(qt.webChannelTransport, function (channel) {
+            window.handler = channel.objects.handler;
+        });
+
         function saveSettings() {
             const color = document.getElementById('highlightColor').value;
-            // In a real scenario, you'd use a Python bridge to save this to config.json
-            // For this example, we'll just log it.
-            console.log("Selected color:", color);
-            alert("Settings saved! (Color: " + color + ")");
+            if (window.handler) {
+                window.handler.saveColor(color);
+                alert("Settings saved! Color: " + color);
+            }
         }
     </script>
 </body>
