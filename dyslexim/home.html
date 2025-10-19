@@ -1,0 +1,122 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Dyslexim</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #0f1720;
+            color: #e6eef8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 600px;
+            padding: 40px;
+            background-color: #1e293b;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            font-weight: 700;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+
+        p {
+            font-weight: 300;
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .settings {
+            margin-bottom: 30px;
+        }
+
+        .setting {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: 600;
+            font-size: 1.2em;
+        }
+
+        input[type="color"] {
+            -webkit-appearance: none;
+            width: 50px;
+            height: 50px;
+            border: none;
+            cursor: pointer;
+            border-radius: 50%;
+            padding: 0;
+            background-color: transparent;
+        }
+
+        input[type="color"]::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+
+        input[type="color"]::-webkit-color-swatch {
+            border: 2px solid #4a5568;
+            border-radius: 50%;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: #0f9d58;
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #0c7c46;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Dyslexim</h1>
+        <p>Your reading companion. Customize your experience below.</p>
+
+        <div class="settings">
+            <div class="setting">
+                <label for="highlightColor">Highlight Color</label>
+                <input type="color" id="highlightColor" value="#ffc800">
+            </div>
+        </div>
+
+        <a href="#" class="button" onclick="saveSettings()">Start Browsing</a>
+    </div>
+
+    <script>
+        function saveSettings() {
+            const color = document.getElementById('highlightColor').value;
+            // In a real scenario, you'd use a Python bridge to save this to config.json
+            // For this example, we'll just log it.
+            console.log("Selected color:", color);
+            alert("Settings saved! (Color: " + color + ")");
+        }
+    </script>
+</body>
+</html>

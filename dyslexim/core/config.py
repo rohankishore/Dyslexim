@@ -1,8 +1,41 @@
-
 # dyslexim/core/config.py
+import json
+import os
+
+# Path to the config file
+CONFIG_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config.json')
+
+# Default values
+DEFAULT_HIGHLIGHT_COLOR = "rgba(255, 200, 0, 0.35)"
+
+
+def load_config():
+    """Loads the configuration from config.json."""
+    if not os.path.exists(CONFIG_PATH):
+        return {
+            'highlightColor': DEFAULT_HIGHLIGHT_COLOR
+        }
+    try:
+        with open(CONFIG_PATH, 'r') as f:
+            return json.load(f)
+    except (json.JSONDecodeError, IOError):
+        return {
+            'highlightColor': DEFAULT_HIGHLIGHT_COLOR
+        }
+
+def save_config(config):
+    """Saves the configuration to config.json."""
+    try:
+        with open(CONFIG_PATH, 'w') as f:
+            json.dump(config, f, indent=2)
+    except IOError:
+        pass
+
+# Initial config load
+config = load_config()
 
 # URL to load in the initial tab
-HOME_URL = "https://www.example.com"
+HOME_URL = "file:///" + os.path.join(os.path.dirname(os.path.dirname(__file__)), 'home.html').replace('\\', '/')
 
 # Small delay in milliseconds before injecting the gaze handler after a page load
 INJECT_DELAY_MS = 220
