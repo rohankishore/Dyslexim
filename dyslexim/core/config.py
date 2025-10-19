@@ -55,6 +55,7 @@ config = load_config()
 
 # URL to load in the initial tab
 HOME_URL = "file:///" + get_asset_path('home.html').replace('\\', '/')
+SETTINGS_URL = "file:///" + get_asset_path('settings.html').replace('\\', '/')
 
 # Small delay in milliseconds before injecting the gaze handler after a page load
 INJECT_DELAY_MS = 220
