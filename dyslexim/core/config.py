@@ -18,8 +18,9 @@ CONFIG_PATH = get_asset_path('config.json')
 
 # Default values
 DEFAULT_HIGHLIGHT_COLOR = "rgba(255, 200, 0, 0.35)"
-DEFAULT_FONT = "OpenDyslexic"
-DEFAULT_HIGHLIGHT_ALIGNMENT = "left"
+DEFAULT_FONT = "Poppins"
+DEFAULT_HIGHLIGHT_ALIGNMENT = "center"
+DEFAULT_READING_MASK = True
 POST_ONBOARDING_URL = "https://www.google.com"
 
 def load_config():
@@ -29,17 +30,22 @@ def load_config():
             'highlightColor': DEFAULT_HIGHLIGHT_COLOR,
             'onboarding_complete': False,
             'font': DEFAULT_FONT,
-            'highlightAlignment': DEFAULT_HIGHLIGHT_ALIGNMENT
+            'highlightAlignment': DEFAULT_HIGHLIGHT_ALIGNMENT,
+            'readingMask': DEFAULT_READING_MASK
         }
     try:
         with open(CONFIG_PATH, 'r') as f:
-            return json.load(f)
+            config_data = json.load(f)
+            if 'readingMask' not in config_data:
+                config_data['readingMask'] = DEFAULT_READING_MASK
+            return config_data
     except (json.JSONDecodeError, IOError):
         return {
             'highlightColor': DEFAULT_HIGHLIGHT_COLOR,
             'onboarding_complete': False,
             'font': DEFAULT_FONT,
-            'highlightAlignment': DEFAULT_HIGHLIGHT_ALIGNMENT
+            'highlightAlignment': DEFAULT_HIGHLIGHT_ALIGNMENT,
+            'readingMask': DEFAULT_READING_MASK
         }
 
 def save_config(config):
