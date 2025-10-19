@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -132,6 +131,10 @@
                     <option value="right">Right</option>
                 </select>
             </div>
+            <div class="setting">
+                <label for="readingMask">Reading Mask</label>
+                <input type="checkbox" id="readingMask" checked>
+            </div>
         </div>
 
         <a href="#" class="button" onclick="saveSettings()">Save Settings</a>
@@ -146,9 +149,10 @@
             const color = document.getElementById('highlightColor').value;
             const font = document.getElementById('font').value;
             const alignment = document.getElementById('highlightAlignment').value;
+            const readingMask = document.getElementById('readingMask').checked;
 
             if (window.handler) {
-                window.handler.saveSettings(color, font, alignment);
+                window.handler.saveSettings(color, font, alignment, readingMask);
                 alert("Settings saved!");
             }
         }
