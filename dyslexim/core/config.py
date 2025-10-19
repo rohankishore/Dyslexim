@@ -43,7 +43,7 @@ def save_config(config):
 config = load_config()
 
 # URL to load in the initial tab
-HOME_URL = "file:///" + os.path.join(os.path.dirname(os.path.dirname(__file__)), 'home.html').replace('\\', '/')
+HOME_URL = ('home.html').replace('\\', '/')
 
 # Small delay in milliseconds before injecting the gaze handler after a page load
 INJECT_DELAY_MS = 220
