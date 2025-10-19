@@ -89,4 +89,5 @@ def get_js_gaze_handler(highlight_color, font, alignment):
       // marker for dev
       // console.log('Dyslexim handler installed');
     }})();
+    
     """
