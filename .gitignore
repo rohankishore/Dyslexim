@@ -4,3 +4,4 @@
 .idea
 dyslexim\build\main
 dyslexim/core/__pycache__/
+dyslexim/core/__pycache__/js_handler.cpython-311.pyc
