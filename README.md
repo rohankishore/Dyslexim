@@ -1,8 +1,10 @@
-# Dyslexim Browser
+<div align="center">
 
-![Dyslexim Logo](https://raw.githubusercontent.com/Rohan-s18/Dyslexim/main/assets/logo.png)
+<img width="1416" height="396" alt="Group 3" src="https://github.com/user-attachments/assets/94ea0078-8fe3-401b-9278-907f51556784" />
 
 **A web browser designed to make the internet more accessible for individuals with dyslexia.**
+
+</div>
 
 ---
 
