@@ -1,3 +1,4 @@
+
 # dyslexim/core/js_handler.py
 
 def get_js_gaze_handler(highlight_color, font, alignment):
@@ -7,8 +8,16 @@ def get_js_gaze_handler(highlight_color, font, alignment):
       if (window.__dyslexim_handler_installed) return;
       window.__dyslexim_handler_installed = true;
       window.__dyslexim_prevEl = null;
+      let debounceTimeout;
 
-      window.__dyslexim_handleGaze = function(normX, normY) {{
+      function debounce(func, delay) {{
+          return function(...args) {{
+              clearTimeout(debounceTimeout);
+              debounceTimeout = setTimeout(() => func.apply(this, args), delay);
+          }};
+      }}
+
+      const handleGaze = function(normX, normY) {{
         try {{
           const w = document.documentElement.clientWidth || window.innerWidth;
           const h = document.documentElement.clientHeight || window.innerHeight;
@@ -16,17 +25,14 @@ def get_js_gaze_handler(highlight_color, font, alignment):
           const y = Math.round(Math.max(0, Math.min(1, normY)) * h);
 
           let el = document.elementFromPoint(x, y);
-          if (!el) {{
-            // fallback small offsets
+          if (!el || el.tagName === 'BODY' || el.tagName === 'HTML') {{
             const els = document.elementsFromPoint(x+6, y) || [];
             el = els[0] || null;
           }}
-          if (!el) return;
+          if (!el || el.tagName === 'BODY' || el.tagName === 'HTML') return;
 
-          // avoid reapplying to same element
           if (window.__dyslexim_prevEl === el) return;
 
-          // cleanup previous
           if (window.__dyslexim_prevEl) {{
             window.__dyslexim_prevEl.classList.remove('__dyslexim_highlight');
             if (window.__dyslexim_prevEl.__dyslexim_prevStyles) {{
@@ -38,7 +44,6 @@ def get_js_gaze_handler(highlight_color, font, alignment):
             }}
           }}
 
-          // add highlight and adjust spacing for text-like elements
           el.classList.add('__dyslexim_highlight');
           const tag = el.tagName ? el.tagName.toLowerCase() : '';
           const textLike = tag === 'p' || tag === 'span' || tag === 'div' || el.closest('article') || el.closest('p');
@@ -58,7 +63,6 @@ def get_js_gaze_handler(highlight_color, font, alignment):
             el.style.textAlign = '{alignment}';
           }}
 
-          // auto-scroll into view if off-screen
           const rect = el.getBoundingClientRect();
           if (rect.top < 24 || rect.bottom > h - 24) {{
             el.scrollIntoView({{behavior:'smooth', block:'center'}});
@@ -66,12 +70,12 @@ def get_js_gaze_handler(highlight_color, font, alignment):
 
           window.__dyslexim_prevEl = el;
         }} catch (e) {{
-          // Don't spam console on edge cases
           // console.error('Dyslexim gaze handler error', e);
         }}
       }};
 
-      // minimal CSS for highlight (scoped so it won't clash badly)
+      window.__dyslexim_handleGaze = debounce(handleGaze, 50);
+
       (function() {{
         const style = document.createElement('style');
         style.setAttribute('data-dyslexim', '1');
@@ -80,13 +84,12 @@ def get_js_gaze_handler(highlight_color, font, alignment):
             outline: 3px solid {highlight_color} !important;
             outline-offset: 3px !important;
             background-color: rgba(255,255,0,0.04) !important;
-            transition: outline 0.12s ease !important;
+            transition: outline 0.12s ease, background-color 0.12s ease !important;
+            box-shadow: 0 0 15px {highlight_color};
           }}
         `;
         document.head && document.head.appendChild(style);
       }})();
 
-      // marker for dev
-      // console.log('Dyslexim handler installed');
     }})();
     """
