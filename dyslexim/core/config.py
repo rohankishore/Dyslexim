@@ -1,9 +1,20 @@
 # dyslexim/core/config.py
 import json
 import os
+import sys
+
+def get_asset_path(relative_path):
+    """ Get absolute path to asset, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+
+    return os.path.join(base_path, relative_path)
 
 # Path to the config file
-CONFIG_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config.json')
+CONFIG_PATH = get_asset_path('config.json')
 
 # Default values
 DEFAULT_HIGHLIGHT_COLOR = "rgba(255, 200, 0, 0.35)"
@@ -43,7 +54,7 @@ def save_config(config):
 config = load_config()
 
 # URL to load in the initial tab
-HOME_URL = ('home.html').replace('\\', '/')
+HOME_URL = "file:///" + get_asset_path('home.html').replace('\\', '/')
 
 # Small delay in milliseconds before injecting the gaze handler after a page load
 INJECT_DELAY_MS = 220
