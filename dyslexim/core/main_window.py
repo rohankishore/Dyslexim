@@ -1,4 +1,3 @@
-
 # dyslexim/core/main_window.py
 
 from functools import partial
@@ -14,7 +13,7 @@ from PyQt6.QtWebEngineCore import QWebEnginePage
 from PyQt6.QtWebChannel import QWebChannel
 
 from .browser_tab import BrowserTab
-from .config import HOME_URL, INJECT_DELAY_MS, GAZE_UPDATE_INTERVAL_MS, load_config, save_config, config, POST_ONBOARDING_URL
+from .config import HOME_URL, INJECT_DELAY_MS, GAZE_UPDATE_INTERVAL_MS, load_config, save_config, config, POST_ONBOARDING_URL, SETTINGS_URL
 from .js_handler import get_js_gaze_handler, get_focus_mode_js
 
 
@@ -137,6 +136,14 @@ class DysleximMainWindow(QMainWindow):
         self.focus_btn.setCheckable(True)
         self.focus_btn.clicked.connect(self.toggle_focus_mode)
         self.toolbar.addWidget(self.focus_btn)
+
+        # Settings
+        settings_icon = self.style().standardIcon(QStyle.StandardPixmap.SP_FileDialogDetailedView)
+        self.settings_btn = QPushButton()
+        self.settings_btn.setIcon(settings_icon)
+        self.settings_btn.setToolTip("Settings")
+        self.settings_btn.clicked.connect(self.open_settings)
+        self.toolbar.addWidget(self.settings_btn)
 
         # New Tab
         newtab_btn = QPushButton("+ New Tab")
@@ -263,3 +270,7 @@ class DysleximMainWindow(QMainWindow):
 
         js = get_focus_mode_js(self.focus_btn.isChecked())
         tab.view.page().runJavaScript(js)
+
+    def open_settings(self):
+        """Opens the settings page in a new tab."""
+        self.add_new_tab(SETTINGS_URL, "Settings")
