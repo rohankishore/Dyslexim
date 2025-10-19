@@ -94,7 +94,7 @@ def get_js_gaze_handler(highlight_color, font, alignment, reading_mask, tts_hove
                 document.body.appendChild(readingMask);
             }}
             const padding = 10;
-            readingMask.style.clipPath = `inset(${{rect.top - padding}}px 0 ${{h - (rect.bottom + padding)}}px 0)`;
+            readingMask.style.clipPath = `polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 0, ${{rect.left - padding}}px ${{rect.top - padding}}px, ${{rect.left - padding}}px ${{rect.bottom + padding}}px, ${{rect.right + padding}}px ${{rect.bottom + padding}}px, ${{rect.right + padding}}px ${{rect.top - padding}}px, ${{rect.left - padding}}px ${{rect.top - padding}}px)`;
 
           }} else {{
             let readingMask = document.getElementById('__dyslexim_reading_mask');
@@ -114,6 +114,25 @@ def get_js_gaze_handler(highlight_color, font, alignment, reading_mask, tts_hove
       }};
 
       window.__dyslexim_handleGaze = debounce(handleGaze, 50);
+
+      window.__dyslexim_clearHighlight = function() {
+        if (window.__dyslexim_prevEl) {
+          window.__dyslexim_prevEl.classList.remove('__dyslexim_highlight');
+          if (window.__dyslexim_prevEl.__dyslexim_prevStyles) {
+            const prev = window.__dyslexim_prevEl.__dyslexim_prevStyles;
+            for (const k in prev) {
+              window.__dyslexim_prevEl.style[k] = prev[k];
+            }
+            window.__dyslexim_prevEl.__dyslexim_prevStyles = null;
+          }
+        }
+        let readingMask = document.getElementById('__dyslexim_reading_mask');
+        if (readingMask) {
+          readingMask.remove();
+        }
+        speechSynthesis.cancel();
+        window.__dyslexim_prevEl = null;
+      };
 
       (function() {{
         const style = document.createElement('style');

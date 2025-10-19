@@ -276,6 +276,15 @@ class DysleximMainWindow(QMainWindow):
         js = get_focus_mode_js(self.focus_btn.isChecked())
         tab.view.page().runJavaScript(js)
 
+    def leaveEvent(self, event):
+        """Clears the highlight when the mouse leaves the window."""
+        tab = self.current_tab()
+        if not tab:
+            return
+
+        js = "(function(){ if(window.__dyslexim_clearHighlight) window.__dyslexim_clearHighlight(); })();"
+        tab.view.page().runJavaScript(js)
+
     def open_settings(self):
         """Opens the settings page in a new tab."""
         self.add_new_tab(SETTINGS_URL, "Settings")
