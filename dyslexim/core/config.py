@@ -18,8 +18,8 @@ CONFIG_PATH = get_asset_path('config.json')
 
 # Default values
 DEFAULT_HIGHLIGHT_COLOR = "rgba(255, 200, 0, 0.35)"
-DEFAULT_FONT = "Poppins"
-DEFAULT_HIGHLIGHT_ALIGNMENT = "center"
+DEFAULT_FONT = "OpenDyslexic"
+DEFAULT_HIGHLIGHT_ALIGNMENT = "left"
 POST_ONBOARDING_URL = "https://www.google.com"
 
 def load_config():
