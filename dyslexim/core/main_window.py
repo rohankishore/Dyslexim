@@ -1,19 +1,28 @@
-
 # dyslexim/core/main_window.py
 
 from functools import partial
+import json
 
-from PyQt6.QtCore import Qt, QTimer, QUrl
+from PyQt6.QtCore import Qt, QTimer, QUrl, QObject, pyqtSlot
 from PyQt6.QtGui import QAction, QIcon, QCursor
 from PyQt6.QtWidgets import (
     QMainWindow, QToolBar, QLineEdit, QTabWidget, QWidget,
     QPushButton, QSizePolicy, QStyle
 )
+from PyQt6.QtWebEngineCore import QWebEnginePage
+from PyQt6.QtWebChannel import QWebChannel
 
 from .browser_tab import BrowserTab
-from .config import HOME_URL, INJECT_DELAY_MS, GAZE_UPDATE_INTERVAL_MS
-from .js_handler import JS_GAZE_HANDLER
+from .config import HOME_URL, INJECT_DELAY_MS, GAZE_UPDATE_INTERVAL_MS, load_config, save_config, config
+from .js_handler import get_js_gaze_handler
 
+
+class WebChannelHandler(QObject):
+    @pyqtSlot(str)
+    def saveColor(self, color):
+        print(f"Color received from JS: {color}")
+        config['highlightColor'] = color
+        save_config(config)
 
 class DysleximMainWindow(QMainWindow):
     """The main application window, managing tabs and the toolbar."""
@@ -39,6 +48,12 @@ class DysleximMainWindow(QMainWindow):
         self.status.showMessage("Ready — gaze simulation: mouse. Toggle with the eye icon.")
 
         self.add_new_tab(HOME_URL, "Home")
+
+        # Set up the web channel
+        self.channel = QWebChannel(self)
+        self.handler = WebChannelHandler(self)
+        self.channel.registerObject('handler', self.handler)
+        self.current_view().page().setWebChannel(self.channel)
 
         self.gaze_timer = QTimer(self)
         self.gaze_timer.timeout.connect(self.dispatch_gaze_to_active_tab)
@@ -112,7 +127,7 @@ class DysleximMainWindow(QMainWindow):
         # New Tab
         newtab_btn = QPushButton("+ New Tab")
         newtab_btn.setObjectName("newtab")
-        newtab_btn.clicked.connect(lambda: self.add_new_tab(HOME_URL, "New Tab"))
+        newtab_btn.clicked.connect(lambda: self.add_new_tab("https://www.google.com", "New Tab"))
         self.toolbar.addWidget(newtab_btn)
 
     def add_new_tab(self, url, label):
@@ -184,7 +199,9 @@ class DysleximMainWindow(QMainWindow):
 
         def do_inject():
             try:
-                tab.view.page().runJavaScript(JS_GAZE_HANDLER)
+                highlight_color = config.get('highlightColor', 'rgba(255, 200, 0, 0.35)')
+                js = get_js_gaze_handler(highlight_color)
+                tab.view.page().runJavaScript(js)
             except Exception:
                 pass  # Ignore potential errors on special pages
 
