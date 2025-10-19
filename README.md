@@ -1,8 +1,10 @@
-# Dyslexim Browser
+<div align="center">
 
-![Dyslexim Logo](https://raw.githubusercontent.com/Rohan-s18/Dyslexim/main/assets/logo.png)
+<img width="1416" height="396" alt="Group 3" src="https://github.com/user-attachments/assets/94ea0078-8fe3-401b-9278-907f51556784" />
 
 **A web browser designed to make the internet more accessible for individuals with dyslexia.**
+
+</div>
 
 ---
 
@@ -12,14 +14,15 @@ The modern web is a sea of text. For the 10-15% of the population with dyslexia,
 
 ## Our Solution
 
-Dyslexim is a web browser built from the ground up with the needs of dyslexic users in mind. By providing a suite of tools to customize the reading experience, Dyslexim empowers users to transform any webpage into a comfortable and readable format.
+Dyslexim is a web browser built from the ground up with the needs of dyslexic users in mind. By providing a suite of tools to customise the reading experience, Dyslexim empowers users to transform any webpage into a comfortable and readable format.
 
 Our approach is based on proven accessibility principles:
 
 *   **Readable Fonts**: We provide a selection of dyslexia-friendly fonts, including OpenDyslexic, to reduce letter confusion and improve readability.
 *   **Enhanced Spacing**: Increased line and letter spacing helps to de-clutter text and make it easier to follow.
 *   **Focused Reading**: Our unique gaze-highlighting feature acts as a digital reading ruler, guiding the user's focus and preventing them from losing their place.
-*   **Customization**: Users can customize the highlight color, font, and text alignment to suit their personal preferences.
+*   **Text to Speech**: Hover over a text for a specified period and get a narration of the text.
+*   **Customisation**: Users can customise the highlight colour, font, and text alignment to suit their personal preferences.
 
 ## Features
 
@@ -33,7 +36,7 @@ Our approach is based on proven accessibility principles:
 
 1.  **Clone the repository**:
     ```bash
-    git clone https://github.com/Rohan-s18/Dyslexim.git
+    git clone https://github.com/rohankishore/Dyslexim/
     ```
 2.  **Install dependencies**:
     ```bash
@@ -50,9 +53,12 @@ Our approach is based on proven accessibility principles:
 *   **Gaze Highlighting**: Simply move your mouse over the text you want to read, and the highlight will follow.
 *   **Toggle Highlighting**: You can toggle the gaze highlighting on and off for the current tab by clicking the eye icon in the toolbar.
 
-## Contributing
 
-We welcome contributions from the community! If you have an idea for a new feature or have found a bug, please open an issue on our GitHub repository. Pull requests are also welcome.
+## References
+- https://userway.org/blog/improving-websites-for-users-with-dyslexia/
+- https://ai.google.dev/edge/mediapipe/solutions/vision/face_landmarker
+- https://userway.org/blog/best-fonts-for-dyslexia/
+- https://opendyslexic.org/
 
 ## License
 
