@@ -1,6 +1,6 @@
 # dyslexim/core/js_handler.py
 
-def get_js_gaze_handler(highlight_color, font, alignment, reading_mask):
+def get_js_gaze_handler(highlight_color, font, alignment, reading_mask, tts_hover_time):
     """Returns the JavaScript gaze handler with the specified highlight color, font, and alignment."""
     return f"""
     (function(){{
@@ -8,6 +8,7 @@ def get_js_gaze_handler(highlight_color, font, alignment, reading_mask):
       window.__dyslexim_handler_installed = true;
       window.__dyslexim_prevEl = null;
       let debounceTimeout;
+      let ttsTimeout;
 
       const TEXT_TAGS = ['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'SPAN', 'A', 'LI', 'TD', 'TH', 'CAPTION', 'PRE', 'CODE', 'BLOCKQUOTE'];
 
@@ -48,6 +49,9 @@ def get_js_gaze_handler(highlight_color, font, alignment, reading_mask):
             }}
           }}
 
+          clearTimeout(ttsTimeout);
+          speechSynthesis.cancel();
+
           el.classList.add('__dyslexim_highlight');
           el.__dyslexim_prevStyles = {{
             lineHeight: el.style.lineHeight || '',
@@ -62,6 +66,14 @@ def get_js_gaze_handler(highlight_color, font, alignment, reading_mask):
           el.style.backgroundColor = 'rgba(255,255,0,0.03)';
           el.style.fontFamily = `'{font}'`;
           el.style.textAlign = '{alignment}';
+
+          ttsTimeout = setTimeout(() => {{
+            const text = el.innerText || el.textContent;
+            if (text) {{
+              const utterance = new SpeechSynthesisUtterance(text);
+              speechSynthesis.speak(utterance);
+            }}
+          }}, {tts_hover_time * 1000});
 
           const rect = el.getBoundingClientRect();
           if ({str(reading_mask).lower()}) {{
