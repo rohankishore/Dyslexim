@@ -1,3 +1,4 @@
+
 # dyslexim/core/main_window.py
 
 from functools import partial
@@ -14,7 +15,7 @@ from PyQt6.QtWebChannel import QWebChannel
 
 from .browser_tab import BrowserTab
 from .config import HOME_URL, INJECT_DELAY_MS, GAZE_UPDATE_INTERVAL_MS, load_config, save_config, config, POST_ONBOARDING_URL
-from .js_handler import get_js_gaze_handler
+from .js_handler import get_js_gaze_handler, get_focus_mode_js
 
 
 class WebChannelHandler(QObject):
@@ -128,6 +129,14 @@ class DysleximMainWindow(QMainWindow):
         self.gaze_btn.setText("👁️")
         self.gaze_btn.clicked.connect(self.toggle_gaze_for_current_tab)
         self.toolbar.addWidget(self.gaze_btn)
+
+        # Focus Mode
+        self.focus_btn = QPushButton()
+        self.focus_btn.setToolTip("Toggle Focus Mode (removes styles)")
+        self.focus_btn.setText("🎯")
+        self.focus_btn.setCheckable(True)
+        self.focus_btn.clicked.connect(self.toggle_focus_mode)
+        self.toolbar.addWidget(self.focus_btn)
 
         # New Tab
         newtab_btn = QPushButton("+ New Tab")
@@ -245,3 +254,12 @@ class DysleximMainWindow(QMainWindow):
         tab.gaze_enabled = not getattr(tab, "gaze_enabled", True)
         self.status.showMessage(f"Gaze highlighting {'enabled' if tab.gaze_enabled else 'disabled'} for this tab.", 3000)
         self.gaze_btn.setText("👁️" if tab.gaze_enabled else "🚫")
+
+    def toggle_focus_mode(self):
+        """Toggles the focus mode for the current tab."""
+        tab = self.current_tab()
+        if not tab:
+            return
+
+        js = get_focus_mode_js(self.focus_btn.isChecked())
+        tab.view.page().runJavaScript(js)
