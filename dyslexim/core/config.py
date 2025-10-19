@@ -21,7 +21,9 @@ DEFAULT_HIGHLIGHT_COLOR = "rgba(255, 200, 0, 0.35)"
 DEFAULT_FONT = "Poppins"
 DEFAULT_HIGHLIGHT_ALIGNMENT = "center"
 DEFAULT_READING_MASK = True
+DEFAULT_TTS_HOVER_TIME = 1.0
 POST_ONBOARDING_URL = "https://www.google.com"
+
 
 def load_config():
     """Loads the configuration from config.json."""
@@ -31,13 +33,16 @@ def load_config():
             'onboarding_complete': False,
             'font': DEFAULT_FONT,
             'highlightAlignment': DEFAULT_HIGHLIGHT_ALIGNMENT,
-            'readingMask': DEFAULT_READING_MASK
+            'readingMask': DEFAULT_READING_MASK,
+            'ttsHoverTime': DEFAULT_TTS_HOVER_TIME
         }
     try:
         with open(CONFIG_PATH, 'r') as f:
             config_data = json.load(f)
             if 'readingMask' not in config_data:
                 config_data['readingMask'] = DEFAULT_READING_MASK
+            if 'ttsHoverTime' not in config_data:
+                config_data['ttsHoverTime'] = DEFAULT_TTS_HOVER_TIME
             return config_data
     except (json.JSONDecodeError, IOError):
         return {
@@ -45,7 +50,8 @@ def load_config():
             'onboarding_complete': False,
             'font': DEFAULT_FONT,
             'highlightAlignment': DEFAULT_HIGHLIGHT_ALIGNMENT,
-            'readingMask': DEFAULT_READING_MASK
+            'readingMask': DEFAULT_READING_MASK,
+            'ttsHoverTime': DEFAULT_TTS_HOVER_TIME
         }
 
 def save_config(config):

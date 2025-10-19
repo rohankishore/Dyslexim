@@ -19,13 +19,14 @@ from .js_handler import get_js_gaze_handler, get_focus_mode_js
 
 
 class WebChannelHandler(QObject):
-    @pyqtSlot(str, str, str, bool)
-    def saveSettings(self, color, font, alignment, readingMask):
-        print(f"Settings received from JS: {color}, {font}, {alignment}, {readingMask}")
+    @pyqtSlot(str, str, str, bool, float)
+    def saveSettings(self, color, font, alignment, readingMask, ttsHoverTime):
+        print(f"Settings received from JS: {color}, {font}, {alignment}, {readingMask}, {ttsHoverTime}")
         config['highlightColor'] = color
         config['font'] = font
         config['highlightAlignment'] = alignment
         config['readingMask'] = readingMask
+        config['ttsHoverTime'] = ttsHoverTime
         config['onboarding_complete'] = True
         save_config(config)
 
@@ -227,7 +228,8 @@ class DysleximMainWindow(QMainWindow):
                 font = config.get('font', 'Poppins')
                 alignment = config.get('highlightAlignment', 'center')
                 reading_mask = config.get('readingMask', True)
-                js = get_js_gaze_handler(highlight_color, font, alignment, reading_mask)
+                tts_hover_time = config.get('ttsHoverTime', 1.0)
+                js = get_js_gaze_handler(highlight_color, font, alignment, reading_mask, tts_hover_time)
                 tab.view.page().runJavaScript(js)
             except Exception as e:
                 print(e)
