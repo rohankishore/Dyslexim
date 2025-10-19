@@ -33,7 +33,7 @@ Our approach is based on proven accessibility principles:
 
 1.  **Clone the repository**:
     ```bash
-    git clone https://github.com/Rohan-s18/Dyslexim.git
+    git clone https://github.com/rohankishore/Dyslexim/
     ```
 2.  **Install dependencies**:
     ```bash
@@ -50,9 +50,12 @@ Our approach is based on proven accessibility principles:
 *   **Gaze Highlighting**: Simply move your mouse over the text you want to read, and the highlight will follow.
 *   **Toggle Highlighting**: You can toggle the gaze highlighting on and off for the current tab by clicking the eye icon in the toolbar.
 
-## Contributing
 
-We welcome contributions from the community! If you have an idea for a new feature or have found a bug, please open an issue on our GitHub repository. Pull requests are also welcome.
+## References
+- https://userway.org/blog/improving-websites-for-users-with-dyslexia/
+- https://ai.google.dev/edge/mediapipe/solutions/vision/face_landmarker
+- https://userway.org/blog/best-fonts-for-dyslexia/
+- https://opendyslexic.org/
 
 ## License
 
