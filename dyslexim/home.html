@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,6 +8,8 @@
     <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap');
 
         body {
             font-family: 'Poppins', sans-serif;
@@ -44,6 +47,7 @@
 
         .settings {
             margin-bottom: 30px;
+            text-align: left;
         }
 
         .setting {
@@ -78,6 +82,16 @@
             border-radius: 50%;
         }
 
+        select {
+            background: #0b1220;
+            color: #e6eef8;
+            border: 1px solid #1f2a37;
+            padding: 10px;
+            border-radius: 6px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1em;
+        }
+
         .button {
             display: inline-block;
             padding: 15px 30px;
@@ -104,6 +118,22 @@
                 <label for="highlightColor">Highlight Color</label>
                 <input type="color" id="highlightColor" value="#ffc800">
             </div>
+            <div class="setting">
+                <label for="font">Font</label>
+                <select id="font">
+                    <option value="Poppins">Poppins</option>
+                    <option value="Roboto">Roboto</option>
+                    <option value="Open Sans">Open Sans</option>
+                </select>
+            </div>
+            <div class="setting">
+                <label for="highlightAlignment">Highlight Alignment</label>
+                <select id="highlightAlignment">
+                    <option value="left">Left</option>
+                    <option value="center">Center</option>
+                    <option value="right">Right</option>
+                </select>
+            </div>
         </div>
 
         <a href="#" class="button" onclick="saveSettings()">Start Browsing</a>
@@ -116,9 +146,12 @@
 
         function saveSettings() {
             const color = document.getElementById('highlightColor').value;
+            const font = document.getElementById('font').value;
+            const alignment = document.getElementById('highlightAlignment').value;
+
             if (window.handler) {
-                window.handler.saveColor(color);
-                alert("Settings saved! Color: " + color);
+                window.handler.saveSettings(color, font, alignment);
+                alert("Settings saved!");
             }
         }
     </script>
