@@ -1,3 +1,4 @@
+
 # dyslexim/core/main_window.py
 
 from functools import partial
@@ -13,15 +14,18 @@ from PyQt6.QtWebEngineCore import QWebEnginePage
 from PyQt6.QtWebChannel import QWebChannel
 
 from .browser_tab import BrowserTab
-from .config import HOME_URL, INJECT_DELAY_MS, GAZE_UPDATE_INTERVAL_MS, load_config, save_config, config
+from .config import HOME_URL, INJECT_DELAY_MS, GAZE_UPDATE_INTERVAL_MS, load_config, save_config, config, POST_ONBOARDING_URL
 from .js_handler import get_js_gaze_handler
 
 
 class WebChannelHandler(QObject):
-    @pyqtSlot(str)
-    def saveColor(self, color):
-        print(f"Color received from JS: {color}")
+    @pyqtSlot(str, str, str)
+    def saveSettings(self, color, font, alignment):
+        print(f"Settings received from JS: {color}, {font}, {alignment}")
         config['highlightColor'] = color
+        config['font'] = font
+        config['highlightAlignment'] = alignment
+        config['onboarding_complete'] = True
         save_config(config)
 
 class DysleximMainWindow(QMainWindow):
@@ -47,7 +51,10 @@ class DysleximMainWindow(QMainWindow):
         self.status = self.statusBar()
         self.status.showMessage("Ready — gaze simulation: mouse. Toggle with the eye icon.")
 
-        self.add_new_tab(HOME_URL, "Home")
+        if config.get('onboarding_complete', False):
+            self.add_new_tab(POST_ONBOARDING_URL, "Home")
+        else:
+            self.add_new_tab(HOME_URL, "Welcome")
 
         # Set up the web channel
         self.channel = QWebChannel(self)
@@ -97,7 +104,7 @@ class DysleximMainWindow(QMainWindow):
         # Home
         home_icon = self.style().standardIcon(QStyle.StandardPixmap.SP_DialogYesButton)
         self.act_home = QAction(home_icon, "Home", self)
-        self.act_home.triggered.connect(lambda: self.navigate_to(HOME_URL))
+        self.act_home.triggered.connect(lambda: self.navigate_to(HOME_URL if not config.get('onboarding_complete') else POST_ONBOARDING_URL))
         self.toolbar.addAction(self.act_home)
 
         # Address bar
@@ -127,7 +134,7 @@ class DysleximMainWindow(QMainWindow):
         # New Tab
         newtab_btn = QPushButton("+ New Tab")
         newtab_btn.setObjectName("newtab")
-        newtab_btn.clicked.connect(lambda: self.add_new_tab("https://www.google.com", "New Tab"))
+        newtab_btn.clicked.connect(lambda: self.add_new_tab(POST_ONBOARDING_URL, "New Tab"))
         self.toolbar.addWidget(newtab_btn)
 
     def add_new_tab(self, url, label):
@@ -200,7 +207,9 @@ class DysleximMainWindow(QMainWindow):
         def do_inject():
             try:
                 highlight_color = config.get('highlightColor', 'rgba(255, 200, 0, 0.35)')
-                js = get_js_gaze_handler(highlight_color)
+                font = config.get('font', 'Poppins')
+                alignment = config.get('highlightAlignment', 'center')
+                js = get_js_gaze_handler(highlight_color, font, alignment)
                 tab.view.page().runJavaScript(js)
             except Exception:
                 pass  # Ignore potential errors on special pages
