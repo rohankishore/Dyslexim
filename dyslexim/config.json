@@ -1,7 +1,8 @@
 {
   "highlightColor": "#ffc800",
   "onboarding_complete": true,
-  "font": "OpenDyslexic",
+  "font": "Poppins",
   "highlightAlignment": "left",
-  "readingMask": false
+  "readingMask": true,
+  "ttsHoverTime": 2.0
 }
