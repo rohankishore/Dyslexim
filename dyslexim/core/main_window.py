@@ -1,4 +1,3 @@
-
 # dyslexim/core/main_window.py
 
 from functools import partial
@@ -51,16 +50,15 @@ class DysleximMainWindow(QMainWindow):
         self.status = self.statusBar()
         self.status.showMessage("Ready — gaze simulation: mouse. Toggle with the eye icon.")
 
-        if config.get('onboarding_complete', False):
-            self.add_new_tab(POST_ONBOARDING_URL, "Home")
-        else:
-            self.add_new_tab(HOME_URL, "Welcome")
-
         # Set up the web channel
         self.channel = QWebChannel(self)
         self.handler = WebChannelHandler(self)
         self.channel.registerObject('handler', self.handler)
-        self.current_view().page().setWebChannel(self.channel)
+
+        if config.get('onboarding_complete', False):
+            self.add_new_tab(POST_ONBOARDING_URL, "Home")
+        else:
+            self.add_new_tab(HOME_URL, "Welcome")
 
         self.gaze_timer = QTimer(self)
         self.gaze_timer.timeout.connect(self.dispatch_gaze_to_active_tab)
@@ -140,6 +138,7 @@ class DysleximMainWindow(QMainWindow):
     def add_new_tab(self, url, label):
         """Adds a new browser tab to the tab widget."""
         tab = BrowserTab(self, start_url=url)
+        tab.view.page().setWebChannel(self.channel)
         index = self.tabs.addTab(tab, label)
         self.tabs.setCurrentIndex(index)
 
