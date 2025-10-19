@@ -7,20 +7,28 @@ CONFIG_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config.j
 
 # Default values
 DEFAULT_HIGHLIGHT_COLOR = "rgba(255, 200, 0, 0.35)"
-
+DEFAULT_FONT = "Poppins"
+DEFAULT_HIGHLIGHT_ALIGNMENT = "center"
+POST_ONBOARDING_URL = "https://www.google.com"
 
 def load_config():
     """Loads the configuration from config.json."""
     if not os.path.exists(CONFIG_PATH):
         return {
-            'highlightColor': DEFAULT_HIGHLIGHT_COLOR
+            'highlightColor': DEFAULT_HIGHLIGHT_COLOR,
+            'onboarding_complete': False,
+            'font': DEFAULT_FONT,
+            'highlightAlignment': DEFAULT_HIGHLIGHT_ALIGNMENT
         }
     try:
         with open(CONFIG_PATH, 'r') as f:
             return json.load(f)
     except (json.JSONDecodeError, IOError):
         return {
-            'highlightColor': DEFAULT_HIGHLIGHT_COLOR
+            'highlightColor': DEFAULT_HIGHLIGHT_COLOR,
+            'onboarding_complete': False,
+            'font': DEFAULT_FONT,
+            'highlightAlignment': DEFAULT_HIGHLIGHT_ALIGNMENT
         }
 
 def save_config(config):
