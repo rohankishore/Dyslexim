@@ -1,7 +1,7 @@
 {
   "highlightColor": "#ffc800",
-  "onboarding_complete": false,
+  "onboarding_complete": true,
   "font": "Poppins",
-  "highlightAlignment": "center",
+  "highlightAlignment": "left",
   "readingMask": true
 }

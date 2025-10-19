@@ -1,3 +1,4 @@
+
 # dyslexim/core/main_window.py
 
 from functools import partial
@@ -18,12 +19,13 @@ from .js_handler import get_js_gaze_handler, get_focus_mode_js
 
 
 class WebChannelHandler(QObject):
-    @pyqtSlot(str, str, str)
-    def saveSettings(self, color, font, alignment):
-        print(f"Settings received from JS: {color}, {font}, {alignment}")
+    @pyqtSlot(str, str, str, bool)
+    def saveSettings(self, color, font, alignment, readingMask):
+        print(f"Settings received from JS: {color}, {font}, {alignment}, {readingMask}")
         config['highlightColor'] = color
         config['font'] = font
         config['highlightAlignment'] = alignment
+        config['readingMask'] = readingMask
         config['onboarding_complete'] = True
         save_config(config)
 
@@ -224,10 +226,11 @@ class DysleximMainWindow(QMainWindow):
                 highlight_color = config.get('highlightColor', 'rgba(255, 200, 0, 0.35)')
                 font = config.get('font', 'Poppins')
                 alignment = config.get('highlightAlignment', 'center')
-                js = get_js_gaze_handler(highlight_color, font, alignment)
+                reading_mask = config.get('readingMask', True)
+                js = get_js_gaze_handler(highlight_color, font, alignment, reading_mask)
                 tab.view.page().runJavaScript(js)
-            except Exception:
-                pass  # Ignore potential errors on special pages
+            except Exception as e:
+                print(e)
 
         QTimer.singleShot(INJECT_DELAY_MS, do_inject)
 
