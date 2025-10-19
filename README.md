@@ -12,14 +12,15 @@ The modern web is a sea of text. For the 10-15% of the population with dyslexia,
 
 ## Our Solution
 
-Dyslexim is a web browser built from the ground up with the needs of dyslexic users in mind. By providing a suite of tools to customize the reading experience, Dyslexim empowers users to transform any webpage into a comfortable and readable format.
+Dyslexim is a web browser built from the ground up with the needs of dyslexic users in mind. By providing a suite of tools to customise the reading experience, Dyslexim empowers users to transform any webpage into a comfortable and readable format.
 
 Our approach is based on proven accessibility principles:
 
 *   **Readable Fonts**: We provide a selection of dyslexia-friendly fonts, including OpenDyslexic, to reduce letter confusion and improve readability.
 *   **Enhanced Spacing**: Increased line and letter spacing helps to de-clutter text and make it easier to follow.
 *   **Focused Reading**: Our unique gaze-highlighting feature acts as a digital reading ruler, guiding the user's focus and preventing them from losing their place.
-*   **Customization**: Users can customize the highlight color, font, and text alignment to suit their personal preferences.
+*   **Text to Speech**: Hover over a text for a specified period and get a narration of the text.
+*   **Customisation**: Users can customise the highlight colour, font, and text alignment to suit their personal preferences.
 
 ## Features
 
