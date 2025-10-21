@@ -159,18 +159,13 @@
             window.handler = channel.objects.handler;
         });
 
-        function saveSettings() {
-            const color = document.getElementById('highlightColor').value;
-            const font = document.getElementById('font').value;
-            const alignment = document.getElementById('highlightAlignment').value;
-            const readingMask = document.getElementById('readingMask').checked;
-            const ttsHoverTime = parseFloat(document.getElementById('ttsHoverTime').value);
-            const searchEngine = document.getElementById('searchEngine').value;
-
-            if (window.handler) {
-                window.handler.saveSettings(color, font, alignment, readingMask, ttsHoverTime, searchEngine);
-                alert("Settings saved!");
-            }
+        function loadSettings(settings) {
+            document.getElementById('highlightColor').value = settings.highlightColor;
+            document.getElementById('font').value = settings.font;
+            document.getElementById('highlightAlignment').value = settings.highlightAlignment;
+            document.getElementById('readingMask').checked = settings.readingMask;
+            document.getElementById('ttsHoverTime').value = settings.ttsHoverTime;
+            document.getElementById('searchEngine').value = settings.searchEngine;
         }
     </script>
 </body>
