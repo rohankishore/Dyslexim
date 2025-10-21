@@ -23,6 +23,14 @@ DEFAULT_HIGHLIGHT_ALIGNMENT = "center"
 DEFAULT_READING_MASK = True
 DEFAULT_TTS_HOVER_TIME = 1.0
 POST_ONBOARDING_URL = "https://www.google.com"
+DEFAULT_SEARCH_ENGINE = "Google"
+SEARCH_ENGINES = {
+    "Google": "https://www.google.com/search?q={}",
+    "Bing": "https://www.bing.com/search?q={}",
+    "DuckDuckGo": "https://duckduckgo.com/?q={}",
+    "Yahoo": "https://search.yahoo.com/search?p={}",
+    "Brave": "https://search.brave.com/search?q={}"
+}
 
 
 def load_config():
@@ -34,7 +42,8 @@ def load_config():
             'font': DEFAULT_FONT,
             'highlightAlignment': DEFAULT_HIGHLIGHT_ALIGNMENT,
             'readingMask': DEFAULT_READING_MASK,
-            'ttsHoverTime': DEFAULT_TTS_HOVER_TIME
+            'ttsHoverTime': DEFAULT_TTS_HOVER_TIME,
+            'searchEngine': DEFAULT_SEARCH_ENGINE
         }
     try:
         with open(CONFIG_PATH, 'r') as f:
@@ -43,6 +52,8 @@ def load_config():
                 config_data['readingMask'] = DEFAULT_READING_MASK
             if 'ttsHoverTime' not in config_data:
                 config_data['ttsHoverTime'] = DEFAULT_TTS_HOVER_TIME
+            if 'searchEngine' not in config_data:
+                config_data['searchEngine'] = DEFAULT_SEARCH_ENGINE
             return config_data
     except (json.JSONDecodeError, IOError):
         return {
@@ -51,7 +62,8 @@ def load_config():
             'font': DEFAULT_FONT,
             'highlightAlignment': DEFAULT_HIGHLIGHT_ALIGNMENT,
             'readingMask': DEFAULT_READING_MASK,
-            'ttsHoverTime': DEFAULT_TTS_HOVER_TIME
+            'ttsHoverTime': DEFAULT_TTS_HOVER_TIME,
+            'searchEngine': DEFAULT_SEARCH_ENGINE
         }
 
 def save_config(config):

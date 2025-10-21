@@ -14,7 +14,7 @@ from PyQt6.QtWebEngineCore import QWebEnginePage
 from PyQt6.QtWebChannel import QWebChannel
 
 from .browser_tab import BrowserTab
-from .config import HOME_URL, INJECT_DELAY_MS, GAZE_UPDATE_INTERVAL_MS, load_config, save_config, config, POST_ONBOARDING_URL, SETTINGS_URL
+from .config import HOME_URL, INJECT_DELAY_MS, GAZE_UPDATE_INTERVAL_MS, load_config, save_config, config, POST_ONBOARDING_URL, SETTINGS_URL, SEARCH_ENGINES
 from .js_handler import get_js_gaze_handler, get_focus_mode_js
 
 
@@ -201,8 +201,10 @@ class DysleximMainWindow(QMainWindow):
         if not text:
             return
         if " " in text and "://" not in text:
-            query = QUrl.fromUserInput(f"https://www.google.com/search?q={text.replace(' ', '+')}")
-            self.current_view().setUrl(query)
+            search_engine_name = config.get('searchEngine', 'Google')
+            search_url = SEARCH_ENGINES.get(search_engine_name, "https://www.google.com/search?q={}")
+            query_url = search_url.format(text.replace(' ', '+'))
+            self.current_view().setUrl(QUrl.fromUserInput(query_url))
         else:
             self.current_view().setUrl(QUrl.fromUserInput(text))
 
