@@ -19,14 +19,15 @@ from .js_handler import get_js_gaze_handler, get_focus_mode_js
 
 
 class WebChannelHandler(QObject):
-    @pyqtSlot(str, str, str, bool, float)
-    def saveSettings(self, color, font, alignment, readingMask, ttsHoverTime):
-        print(f"Settings received from JS: {color}, {font}, {alignment}, {readingMask}, {ttsHoverTime}")
+    @pyqtSlot(str, str, str, bool, float, str)
+    def saveSettings(self, color, font, alignment, readingMask, ttsHoverTime, searchEngine):
+        print(f"Settings received from JS: {color}, {font}, {alignment}, {readingMask}, {ttsHoverTime}, {searchEngine}")
         config['highlightColor'] = color
         config['font'] = font
         config['highlightAlignment'] = alignment
         config['readingMask'] = readingMask
         config['ttsHoverTime'] = ttsHoverTime
+        config['searchEngine'] = searchEngine
         config['onboarding_complete'] = True
         save_config(config)
 
