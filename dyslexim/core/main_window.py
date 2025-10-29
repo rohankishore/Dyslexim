@@ -2,7 +2,7 @@ from functools import partial
 import json
 
 from PyQt6.QtCore import Qt, QTimer, QUrl, QObject, pyqtSlot, QSize
-from PyQt6.QtGui import QAction, QIcon, QCursor
+from PyQt6.QtGui import QAction, QIcon, QCursor, QPixmap, QImage
 from PyQt6.QtWidgets import (
     QMainWindow, QToolBar, QLineEdit, QTabWidget, QWidget,
     QPushButton, QSizePolicy, QStyle, QStatusBar
@@ -12,8 +12,8 @@ from PyQt6.QtWebChannel import QWebChannel
 
 from .browser_tab import BrowserTab, BrowserView
 from .config import (
-    HOME_URL, INJECT_DELAY_MS, GAZE_UPDATE_INTERVAL_MS, 
-    load_config, save_config, config, POST_ONBOARDING_URL, 
+    HOME_URL, INJECT_DELAY_MS, GAZE_UPDATE_INTERVAL_MS,
+    load_config, save_config, config, POST_ONBOARDING_URL,
     SETTINGS_URL, SEARCH_ENGINES
 )
 from .js_handler import get_js_gaze_handler, get_focus_mode_js
@@ -100,16 +100,22 @@ class DysleximMainWindow(QMainWindow):
         self.set_stylesheet()
 
     def load_icons(self):
-        """Loads and stores custom SVG icons from QRC."""
-        self.back_icon = QIcon("qrc:///icons/arrow-left.svg")
-        self.fwd_icon = QIcon("qrc:///icons/arrow-right.svg")
-        self.reload_icon = QIcon("qrc:///icons/rotate-cw.svg")
-        self.home_icon = QIcon("qrc:///icons/home.svg")
-        self.settings_icon = QIcon("qrc:///icons/settings.svg")
-        self.gaze_on_icon = QIcon("qrc:///icons/eye.svg")
-        self.gaze_off_icon = QIcon("qrc:///icons/eye-off.svg")
-        self.focus_icon = QIcon("qrc:///icons/target.svg")
-        self.plus_icon = QIcon("qrc:///icons/plus.svg")
+        """Loads and stores custom SVG icons from hardcoded data."""
+        self.back_icon = self._create_icon_from_svg('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>')
+        self.fwd_icon = self._create_icon_from_svg('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>')
+        self.reload_icon = self._create_icon_from_svg('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rotate-cw-icon lucide-rotate-cw"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>')
+        self.home_icon = self._create_icon_from_svg('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-house-icon lucide-house"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>')
+        self.settings_icon = self._create_icon_from_svg('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings-icon lucide-settings"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></svg>')
+        self.gaze_on_icon = self._create_icon_from_svg('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye-icon lucide-eye"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>')
+        self.gaze_off_icon = self._create_icon_from_svg('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye-off-icon lucide-eye-off"><path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"/><path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"/><path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"/><path d="m2 2 20 20"/></svg>')
+        self.focus_icon = self._create_icon_from_svg('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-target-icon lucide-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>')
+        self.plus_icon = self._create_icon_from_svg('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus-icon lucide-plus"><path d="M5 12h14"/><path d="M12 5v14"/></svg>')
+
+    def _create_icon_from_svg(self, svg_data):
+        """Creates a QIcon from SVG data."""
+        image = QImage.fromData(svg_data.encode('utf-8'))
+        pixmap = QPixmap.fromImage(image)
+        return QIcon(pixmap)
 
 
     def set_stylesheet(self):
