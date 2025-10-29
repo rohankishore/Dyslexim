@@ -119,64 +119,65 @@ class DysleximMainWindow(QMainWindow):
 
 
     def set_stylesheet(self):
-        """Sets the new modern stylesheet."""
+        """Sets the new modern light-mode stylesheet."""
         self.setStyleSheet("""
             /* --- Base Window --- */
             QMainWindow { 
-                background: #1c1c1e; /* Softer, iOS-like dark */
+                background: #f8f8fa; /* Soft, modern light grey */
             }
             QStatusBar {
-                color: #8a8a8e;
+                color: #555555; /* Readable dark grey */
             }
 
             /* --- Toolbar --- */
             QToolBar { 
-                background: #1c1c1e;
-                border-bottom: 1px solid #3a3a3c;
+                background: #f8f8fa;
+                border-bottom: 1px solid #dcdcdc; /* Subtle border */
                 spacing: 10px; 
                 padding: 10px 15px;
             }
             
             /* --- URL Bar --- */
             QLineEdit { 
-                background: #2c2c2e; 
-                color: #f2f2f7; 
-                border: 1px solid #3a3a3c; 
+                background: #ffffff; /* Pure white input */
+                color: #1d1d1f; /* Dark text */
+                border: 1px solid #dcdcdc; 
                 padding: 10px 15px; 
                 border-radius: 10px; /* More rounded */
                 font-size: 15px;
             }
             QLineEdit:focus {
-                border: 1px solid #0a84ff; /* Apple blue */
+                border: 1px solid #0a84ff; /* Apple blue accent */
             }
             
             /* --- Tab Bar --- */
             QTabWidget::pane { 
                 /* The content area */
-                border-top: 1px solid #3a3a3c; 
+                border-top: 1px solid #dcdcdc; 
+                background: #f8f8fa; /* Match window */
             }
             QTabBar {
                 /* The bar itself */
-                background: #1c1c1e;
-                border-bottom: 1px solid #3a3a3c;
+                background: #f8f8fa;
+                border-bottom: 1px solid #dcdcdc;
             }
             QTabBar::tab { 
-                background: #1c1c1e; 
-                color: #8a8a8e; /* Muted text */
+                background: #ececec; /* Recessed inactive tabs */
+                color: #555555; /* Muted text */
                 padding: 12px 18px; 
-                border: 1px solid transparent;
+                border: 1px solid #dcdcdc;
                 border-bottom: none; 
                 border-top-left-radius: 8px; 
                 border-top-right-radius: 8px;
+                margin-right: 2px; /* Adds a little space */
             }
             QTabBar::tab:hover {
-                background: #2c2c2e;
+                background: #f2f2f2; /* Lighter hover */
             }
             QTabBar::tab:selected { 
-                background: #1c1c1e; /* Blends with window */
-                color: #f2f2f7;
-                border: 1px solid #3a3a3c;
-                border-bottom: 1px solid #1c1c1e; /* Hides bottom border */
+                background: #f8f8fa; /* Blends with window */
+                color: #1d1d1f; /* Active, dark text */
+                border-bottom: 1px solid #f8f8fa; /* Hides bottom border */
             }
             
             /* --- New Tab Button in Corner --- */
@@ -191,7 +192,7 @@ class DysleximMainWindow(QMainWindow):
                 border-radius: 6px;
             }
             QPushButton#newtab_corner_btn:hover {
-                background: #2c2c2e;
+                background: #e8e8e8; /* Light grey hover */
             }
             
             /* --- Toolbar Buttons (Icons) --- */
@@ -202,15 +203,18 @@ class DysleximMainWindow(QMainWindow):
                 border-radius: 6px;
             }
             QToolBar > QPushButton:hover {
-                background: #2c2c2e;
+                background: #e8e8e8; /* Light grey hover */
             }
             QToolBar > QPushButton:pressed {
-                background: #3a3a3c;
+                background: #dcdcdc; /* Darker grey press */
             }
             QToolBar > QPushButton:checked {
                 /* For 'Focus' button */
-                background: #0a84ff;
-                color: white;
+                background: #0a84ff; /* Blue accent */
+                /* NOTE: Your _create_icon_from_svg method will keep the
+                   icon black. For a white icon, you'd need to
+                   use a different rendering method (like QSvgRenderer)
+                   or load a separate white icon. */
             }
         """)
 
