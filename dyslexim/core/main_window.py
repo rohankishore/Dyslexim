@@ -25,9 +25,15 @@ class WebChannelHandler(QObject):
     @pyqtSlot(str, str, str, bool, float, str)
     def saveSettings(self, color, font, alignment, readingMask, ttsHoverTime, searchEngine):
         """Called by JS from the onboarding/settings page."""
-        # ... (same as before)
+        config['highlightColor'] = color
+        config['font'] = font
+        config['highlightAlignment'] = alignment
+        config['readingMask'] = readingMask
+        config['ttsHoverTime'] = ttsHoverTime
+        config['searchEngine'] = searchEngine
         config['onboarding_complete'] = True
         save_config(config)
+        load_config() # Reload the config
         
         if self.parent():
             self.parent().reload_all_tabs_after_settings_change()

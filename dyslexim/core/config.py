@@ -34,9 +34,10 @@ SEARCH_ENGINES = {
 
 
 def load_config():
-    """Loads the configuration from config.json."""
+    """Loads the configuration from config.json, updating the global config object."""
+    global config
     if not os.path.exists(CONFIG_PATH):
-        return {
+        new_config = {
             'highlightColor': DEFAULT_HIGHLIGHT_COLOR,
             'onboarding_complete': False,
             'font': DEFAULT_FONT,
@@ -45,37 +46,42 @@ def load_config():
             'ttsHoverTime': DEFAULT_TTS_HOVER_TIME,
             'searchEngine': DEFAULT_SEARCH_ENGINE
         }
-    try:
-        with open(CONFIG_PATH, 'r') as f:
-            config_data = json.load(f)
-            if 'readingMask' not in config_data:
-                config_data['readingMask'] = DEFAULT_READING_MASK
-            if 'ttsHoverTime' not in config_data:
-                config_data['ttsHoverTime'] = DEFAULT_TTS_HOVER_TIME
-            if 'searchEngine' not in config_data:
-                config_data['searchEngine'] = DEFAULT_SEARCH_ENGINE
-            return config_data
-    except (json.JSONDecodeError, IOError):
-        return {
-            'highlightColor': DEFAULT_HIGHLIGHT_COLOR,
-            'onboarding_complete': False,
-            'font': DEFAULT_FONT,
-            'highlightAlignment': DEFAULT_HIGHLIGHT_ALIGNMENT,
-            'readingMask': DEFAULT_READING_MASK,
-            'ttsHoverTime': DEFAULT_TTS_HOVER_TIME,
-            'searchEngine': DEFAULT_SEARCH_ENGINE
-        }
+    else:
+        try:
+            with open(CONFIG_PATH, 'r') as f:
+                new_config = json.load(f)
+                if 'readingMask' not in new_config:
+                    new_config['readingMask'] = DEFAULT_READING_MASK
+                if 'ttsHoverTime' not in new_config:
+                    new_config['ttsHoverTime'] = DEFAULT_TTS_HOVER_TIME
+                if 'searchEngine' not in new_config:
+                    new_config['searchEngine'] = DEFAULT_SEARCH_ENGINE
+        except (json.JSONDecodeError, IOError):
+            new_config = {
+                'highlightColor': DEFAULT_HIGHLIGHT_COLOR,
+                'onboarding_complete': False,
+                'font': DEFAULT_FONT,
+                'highlightAlignment': DEFAULT_HIGHLIGHT_ALIGNMENT,
+                'readingMask': DEFAULT_READING_MASK,
+                'ttsHoverTime': DEFAULT_TTS_HOVER_TIME,
+                'searchEngine': DEFAULT_SEARCH_ENGINE
+            }
+    
+    config.clear()
+    config.update(new_config)
+    return config
 
-def save_config(config):
+def save_config(config_data):
     """Saves the configuration to config.json."""
     try:
         with open(CONFIG_PATH, 'w') as f:
-            json.dump(config, f, indent=2)
+            json.dump(config_data, f, indent=2)
     except IOError:
         pass
 
 # Initial config load
-config = load_config()
+config = {}
+load_config()
 
 # URL to load in the initial tab
 HOME_URL = "file:///" + get_asset_path('home.html').replace('\\', '/')
