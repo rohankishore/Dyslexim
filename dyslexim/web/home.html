@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home - Dyslexim</title>
+    <link rel="stylesheet" href="qrc:///web/common.css">
+    <link rel="stylesheet" href="qrc:///web/home.css">
+    <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
+</head>
+<body>
+    
+    <div class="background-overlay"></div>
+    
+    <main class="container">
+        <div class="clock" id="clock">12:00 PM</div>
+        
+        <form class="search-container" id="search-form">
+            <input type="text" id="search-input" placeholder="Search the web">
+            <button type="submit">Search</button>
+        </form>
+        
+        <div class="quick-links">
+            <a href="https://www.google.com" class="link-card">
+                <img src="https://www.google.com/favicon.ico" alt="">
+                <span>Google</span>
+            </a>
+            <a href="https://www.youtube.com" class="link-card">
+                <img src="https://www.youtube.com/favicon.ico" alt="">
+                <span>YouTube</span>
+            </a>
+            <a href="https://www.reddit.com" class="link-card">
+                <img src="https://www.reddit.com/favicon.ico" alt="">
+                <span>Reddit</span>
+            </a>
+            <a href="https://github.com" class="link-card">
+                <img src="https://github.com/favicon.ico" alt="">
+                <span>GitHub</span>
+            </a>
+            <a href="qrc:///web/settings.html" class="link-card">
+                <span>⚙️</span>
+                <span>Settings</span>
+            </a>
+        </div>
+    </main>
+    
+    <script src="qrc:///web/home.js"></script>
+</body>
+</html>

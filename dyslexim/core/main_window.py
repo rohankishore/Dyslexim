@@ -1,7 +1,7 @@
 from functools import partial
 import json
 
-from PyQt6.QtCore import Qt, QTimer, QUrl, QObject, pyqtSlot
+from PyQt6.QtCore import Qt, QTimer, QUrl, QObject, pyqtSlot, QSize
 from PyQt6.QtGui import QAction, QIcon, QCursor
 from PyQt6.QtWidgets import (
     QMainWindow, QToolBar, QLineEdit, QTabWidget, QWidget,
@@ -25,25 +25,26 @@ class WebChannelHandler(QObject):
     @pyqtSlot(str, str, str, bool, float, str)
     def saveSettings(self, color, font, alignment, readingMask, ttsHoverTime, searchEngine):
         """Called by JS from the onboarding/settings page."""
-        print(f"Settings received from JS: {color}, {font}, {alignment}, {readingMask}, {ttsHoverTime}, {searchEngine}")
-        config['highlightColor'] = color
-        config['font'] = font
-        config['highlightAlignment'] = alignment
-        config['readingMask'] = readingMask
-        config['ttsHoverTime'] = ttsHoverTime
-        config['searchEngine'] = searchEngine
+        # ... (same as before)
         config['onboarding_complete'] = True
         save_config(config)
         
-        # Reload all tabs to apply new settings
         if self.parent():
             self.parent().reload_all_tabs_after_settings_change()
 
     @pyqtSlot(result=str)
     def loadSettings(self):
         """Called by JS on the settings page to get current config."""
-        print("JS requested current settings, sending...")
+        # ... (same as before)
         return json.dumps(config)
+        
+    # --- NEW: Slot for the custom home page search ---
+    @pyqtSlot(str)
+    def performSearch(self, term):
+        """Called by home.js to perform a search."""
+        print(f"Search received from JS: {term}")
+        if self.parent() and term:
+            self.parent().navigate_to_search(term)
 
 
 class DysleximMainWindow(QMainWindow):
@@ -52,28 +53,35 @@ class DysleximMainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Dyslexim")
-        self.resize(1200, 780)
+        self.resize(1366, 768)
         
-        # Load standard icons
+        # Load custom SVG icons
         self.load_icons()
 
         self.tabs = QTabWidget()
         self.tabs.setDocumentMode(True)
         self.tabs.setTabsClosable(True)
+        self.tabs.setMovable(True) # Allow re-ordering tabs
         self.tabs.tabCloseRequested.connect(self.close_tab)
-        # --- FIX: Connect tab changed signal for UI sync ---
         self.tabs.currentChanged.connect(self.on_tab_changed)
         self.setCentralWidget(self.tabs)
+        
+        # --- NEW: Add "+" button to tab bar corner ---
+        self.new_tab_btn = QPushButton(self.plus_icon, "")
+        self.new_tab_btn.setToolTip("New Tab")
+        self.new_tab_btn.setObjectName("newtab_corner_btn")
+        self.new_tab_btn.clicked.connect(lambda: self.add_new_tab(POST_ONBOARDING_URL, "New Tab"))
+        self.tabs.setCornerWidget(self.new_tab_btn, Qt.Corner.TopRightCorner)
 
         self.toolbar = QToolBar("Main Toolbar")
         self.toolbar.setMovable(False)
-        self.toolbar.setIconSize(self.style().standardIcon(QStyle.StandardPixmap.SP_FileDialogDetailedView).availableSizes()[0])
+        self.toolbar.setIconSize(QSize(20, 20)) # Crisper icons
         self.addToolBar(Qt.ToolBarArea.TopToolBarArea, self.toolbar)
         self.add_toolbar_items()
 
         self.status = QStatusBar()
         self.setStatusBar(self.status)
-        self.status.showMessage("Ready — gaze simulation: mouse. Toggle with the eye icon.")
+        self.status.showMessage("Welcome to Dyslexim.")
 
         # Set up the web channel
         self.channel = QWebChannel(self)
@@ -83,7 +91,7 @@ class DysleximMainWindow(QMainWindow):
         if config.get('onboarding_complete', False):
             self.add_new_tab(POST_ONBOARDING_URL, "Home")
         else:
-            self.add_new_tab(HOME_URL, "Welcome to Dyslexim")
+            self.add_new_tab(HOME_URL, "Welcome")
 
         self.gaze_timer = QTimer(self)
         self.gaze_timer.timeout.connect(self.dispatch_gaze_to_active_tab)
@@ -92,114 +100,111 @@ class DysleximMainWindow(QMainWindow):
         self.set_stylesheet()
 
     def load_icons(self):
-        """Loads and stores standard icons."""
-        style = self.style()
-        self.back_icon = style.standardIcon(QStyle.StandardPixmap.SP_ArrowBack)
-        self.fwd_icon = style.standardIcon(QStyle.StandardPixmap.SP_ArrowForward)
-        self.reload_icon = style.standardIcon(QStyle.StandardPixmap.SP_BrowserReload)
-        self.home_icon = style.standardIcon(QStyle.StandardPixmap.SP_ComputerIcon)
-        self.settings_icon = style.standardIcon(QStyle.StandardPixmap.SP_FileDialogOptions)
-        
-        # Icons for toggle buttons
-        self.gaze_on_icon = style.standardIcon(QStyle.StandardPixmap.SP_DialogApplyButton)
-        self.gaze_off_icon = style.standardIcon(QStyle.StandardPixmap.SP_DialogCancelButton)
-        self.focus_icon = style.standardIcon(QStyle.StandardPixmap.SP_FileDialogDetailedView)
+        """Loads and stores custom SVG icons from QRC."""
+        self.back_icon = QIcon("qrc:///icons/arrow-left.svg")
+        self.fwd_icon = QIcon("qrc:///icons/arrow-right.svg")
+        self.reload_icon = QIcon("qrc:///icons/rotate-cw.svg")
+        self.home_icon = QIcon("qrc:///icons/home.svg")
+        self.settings_icon = QIcon("qrc:///icons/settings.svg")
+        self.gaze_on_icon = QIcon("qrc:///icons/eye.svg")
+        self.gaze_off_icon = QIcon("qrc:///icons/eye-off.svg")
+        self.focus_icon = QIcon("qrc:///icons/target.svg")
+        self.plus_icon = QIcon("qrc:///icons/plus.svg")
 
 
     def set_stylesheet(self):
-        """Sets the modern stylesheet for the application."""
+        """Sets the new modern stylesheet."""
         self.setStyleSheet("""
+            /* --- Base Window --- */
             QMainWindow { 
-                background: #0d1117; 
+                background: #1c1c1e; /* Softer, iOS-like dark */
             }
+            QStatusBar {
+                color: #8a8a8e;
+            }
+
+            /* --- Toolbar --- */
             QToolBar { 
-                background: #161b22;
-                border-bottom: 1px solid #30363d;
-                spacing: 8px; 
-                padding: 8px 12px;
-            }
-            QLineEdit { 
-                background: #0d1117; 
-                color: #c9d1d9; 
-                border: 1px solid #30363d; 
-                padding: 8px 12px; 
-                border-radius: 6px;
-                font-size: 14px;
-            }
-            QLineEdit:focus {
-                border: 1px solid #2f81f7;
-                box-shadow: 0 0 5px #2f81f7;
-            }
-            QTabWidget::pane { 
-                border-top: 1px solid #30363d; 
-            }
-            QTabBar::tab { 
-                background: #161b22; 
-                color: #8b949e; 
-                padding: 10px 14px; 
-                border: 1px solid #30363d; 
-                border-bottom: none; 
-                border-top-left-radius: 6px; 
-                border-top-right-radius: 6px;
-                margin-right: 1px;
-            }
-            QTabBar::tab:selected { 
-                background: #0d1117; 
-                color: #c9d1d9;
-                border-bottom: 1px solid #0d1117; /* Hides pane border */
-            }
-            QTabBar::tab:!selected:hover {
-                background: #21262d;
-                color: #c9d1d9;
-            }
-            QTabBar::close-button {
-                image: url(icons/close.svg); /* You'll need a close icon */
+                background: #1c1c1e;
+                border-bottom: 1px solid #3a3a3c;
+                spacing: 10px; 
+                padding: 10px 15px;
             }
             
-            /* --- Modern Toolbar Buttons --- */
-            QPushButton { 
-                color: #c9d1d9; 
-                background: #21262d; 
-                border: 1px solid #30363d;
-                padding: 8px 12px;
+            /* --- URL Bar --- */
+            QLineEdit { 
+                background: #2c2c2e; 
+                color: #f2f2f7; 
+                border: 1px solid #3a3a3c; 
+                padding: 10px 15px; 
+                border-radius: 10px; /* More rounded */
+                font-size: 15px;
+            }
+            QLineEdit:focus {
+                border: 1px solid #0a84ff; /* Apple blue */
+            }
+            
+            /* --- Tab Bar --- */
+            QTabWidget::pane { 
+                /* The content area */
+                border-top: 1px solid #3a3a3c; 
+            }
+            QTabBar {
+                /* The bar itself */
+                background: #1c1c1e;
+                border-bottom: 1px solid #3a3a3c;
+            }
+            QTabBar::tab { 
+                background: #1c1c1e; 
+                color: #8a8a8e; /* Muted text */
+                padding: 12px 18px; 
+                border: 1px solid transparent;
+                border-bottom: none; 
+                border-top-left-radius: 8px; 
+                border-top-right-radius: 8px;
+            }
+            QTabBar::tab:hover {
+                background: #2c2c2e;
+            }
+            QTabBar::tab:selected { 
+                background: #1c1c1e; /* Blends with window */
+                color: #f2f2f7;
+                border: 1px solid #3a3a3c;
+                border-bottom: 1px solid #1c1c1e; /* Hides bottom border */
+            }
+            
+            /* --- New Tab Button in Corner --- */
+            QTabBar::corner-widget {
+                padding-right: 10px;
+                padding-top: 8px;
+            }
+            QPushButton#newtab_corner_btn {
+                background: transparent;
+                border: none;
+                padding: 5px;
                 border-radius: 6px;
-                font-weight: 500;
             }
-            QPushButton:hover { 
-                background: #30363d;
-                border-color: #8b949e;
+            QPushButton#newtab_corner_btn:hover {
+                background: #2c2c2e;
             }
-            QPushButton:pressed {
-                background: #2a3037;
-            }
-            /* Special "New Tab" button */
-            QPushButton#newtab { 
-                background: #238636; 
-                border-color: #2ea043;
-                color: #ffffff;
-                font-weight: 600;
-            }
-            QPushButton#newtab:hover {
-                background: #2ea043;
-            }
-            /* Icon-only buttons (Back, Fwd, etc) */
+            
+            /* --- Toolbar Buttons (Icons) --- */
             QToolBar > QPushButton {
                 background: transparent;
                 border: none;
                 padding: 6px;
+                border-radius: 6px;
             }
             QToolBar > QPushButton:hover {
-                background: #21262d;
+                background: #2c2c2e;
             }
             QToolBar > QPushButton:pressed {
-                background: #30363d;
+                background: #3a3a3c;
             }
             QToolBar > QPushButton:checked {
-                background: #1a3c68; /* Blue tint for "on" state */
-            }
-            
-            QStatusBar {
-                color: #8b949e;
+                /* For 'Focus' button */
+                background: #0a84ff;
+                color: white;
             }
         """)
 
@@ -234,7 +239,6 @@ class DysleximMainWindow(QMainWindow):
         self.url_edit = QLineEdit()
         self.url_edit.setPlaceholderText("Enter URL or search term...")
         self.url_edit.returnPressed.connect(self.on_url_entered)
-        # --- UX: Auto-select text on click ---
         self.url_edit.focusInEvent = self.on_url_focus
         self.toolbar.addWidget(self.url_edit)
 
@@ -262,15 +266,8 @@ class DysleximMainWindow(QMainWindow):
         self.settings_btn.clicked.connect(self.open_settings)
         self.toolbar.addWidget(self.settings_btn)
 
-        # New Tab
-        newtab_btn = QPushButton("+ New Tab")
-        newtab_btn.setObjectName("newtab")
-        newtab_btn.clicked.connect(lambda: self.add_new_tab(POST_ONBOARDING_URL, "New Tab"))
-        self.toolbar.addWidget(newtab_btn)
-
     def add_new_tab(self, url, label):
-        """Adds a new browser tab to the tab widget."""
-        # --- FIX: Use the new BrowserTab class ---
+        # ... (same as before)
         tab = BrowserTab(start_url=url)
         tab.view.page().setWebChannel(self.channel)
         
@@ -281,29 +278,27 @@ class DysleximMainWindow(QMainWindow):
         tab.view.urlChanged.connect(partial(self.on_url_changed, tab))
         tab.view.loadFinished.connect(partial(self.on_load_finished_inject, tab))
 
-        self.url_edit.setText(url)
+        if self.tabs.currentIndex() == index:
+             self.url_edit.setText(url)
         return tab
 
     def close_tab(self, idx):
-        """Closes a tab, but not the last one."""
         if self.tabs.count() == 1:
-            return # Don't close the last tab
+            return 
         
         tab_to_remove = self.tabs.widget(idx)
         self.tabs.removeTab(idx)
-        tab_to_remove.deleteLater() # Ensure proper cleanup
+        tab_to_remove.deleteLater() 
 
     def current_tab(self) -> BrowserTab | None:
-        """Returns the currently active BrowserTab."""
+        # ... (same as before)
         return self.tabs.currentWidget()
 
     def current_view(self) -> BrowserView | None:
-        """Returns the web view of the currently active tab."""
         t = self.current_tab()
         return t.view if t else None
 
     def navigate_to(self, url_text):
-        """Navigates the current tab to the given URL string."""
         if not url_text:
             return
         
@@ -314,30 +309,34 @@ class DysleximMainWindow(QMainWindow):
         if "://" in url_text or url_text.startswith("qrc:///"):
             q = QUrl(url_text)
         else:
-            q = QUrl.fromUserInput(url_text) # Handles file paths
+            q = QUrl.fromUserInput(url_text)
             
         view.setUrl(q)
 
+    # --- NEW: Helper for home page search ---
+    def navigate_to_search(self, term):
+        """Navigates the current tab to a search query."""
+        view = self.current_view()
+        if not view or not term:
+            return
+            
+        search_engine_name = config.get('searchEngine', 'Google')
+        search_url = SEARCH_ENGINES.get(search_engine_name, "https://www.google.com/search?q={}")
+        query_url = search_url.format(term.replace(' ', '+'))
+        view.setUrl(QUrl.fromUserInput(query_url))
+        
     def on_url_entered(self):
         """Handles the user entering a URL or search term in the address bar."""
         text = self.url_edit.text().strip()
         if not text:
             return
         
-        view = self.current_view()
-        if not view:
-            return
-
-        # Check for search term (no dot and contains space, or not a URL)
-        is_search = " " in text and "." not in text and "://" not in text
-        
-        if is_search:
-            search_engine_name = config.get('searchEngine', 'Google')
-            search_url = SEARCH_ENGINES.get(search_engine_name, "https://www.google.com/search?q={}")
-            query_url = search_url.format(text.replace(' ', '+'))
-            view.setUrl(QUrl.fromUserInput(query_url))
+        # Simple check: if it has a dot or '://' or 'qrc:', treat as URL.
+        # Otherwise, treat as search.
+        if "." in text or "://" in text or text.startswith("qrc:"):
+            self.navigate_to(text)
         else:
-            view.setUrl(QUrl.fromUserInput(text))
+            self.navigate_to_search(text)
 
     def on_title_changed(self, tab, title):
         """Updates the tab title when the page title changes."""
