@@ -1,25 +1,43 @@
-
-# dyslexim/core/browser_tab.py
-
-from PyQt6.QtCore import QUrl
 from PyQt6.QtWidgets import QWidget, QVBoxLayout
 from PyQt6.QtWebEngineWidgets import QWebEngineView
+from PyQt6.QtWebEngineCore import QWebEngineProfile, QWebEnginePage
+from PyQt6.QtCore import QUrl, pyqtSlot
 
-from .config import HOME_URL
+class BrowserView(QWebEngineView):
+    """A custom QWebEngineView with the leaveEvent fix."""
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
+    # --- FIX: Clear highlight when mouse leaves the web view area ---
+    def leaveEvent(self, event):
+        """Fires when the mouse leaves the web view area."""
+        js = "(function(){ if(window.__dyslexim_clearHighlight) window.__dyslexim_clearHighlight(); })();"
+        self.page().runJavaScript(js)
+        super().leaveEvent(event)
 
 class BrowserTab(QWidget):
-    """A single browser tab, containing a web view."""
-
-    def __init__(self, parent=None, start_url=HOME_URL):
-        super().__init__(parent)
-        self.view = QWebEngineView()
-        self.view.setUrl(QUrl(start_url))
-
-        # Track if we should apply gaze injection on this tab
-        self.gaze_enabled = True
-
+    """A single tab widget, containing a web view and its state."""
+    
+    def __init__(self, start_url, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
         layout = QVBoxLayout()
         layout.setContentsMargins(0, 0, 0, 0)
+        
+        # --- State is stored here, on the tab ---
+        self.gaze_enabled = True
+        self.focus_mode_enabled = False
+        
+        self.view = BrowserView()
+        
+        # Use an off-the-record profile for privacy, like Incognito
+        # Use QWebEngineProfile.defaultProfile() for persistence
+        self.profile = QWebEngineProfile(f"profile_{id(self)}", self)
+        self.page = QWebEnginePage(self.profile, self)
+        self.view.setPage(self.page)
+        
         layout.addWidget(self.view)
         self.setLayout(layout)
+        
+        self.view.setUrl(QUrl(start_url))
