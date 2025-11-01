@@ -94,10 +94,11 @@ class DysleximMainWindow(QMainWindow):
         self.handler = WebChannelHandler(self)
         self.channel.registerObject('handler', self.handler)
 
-        if config.get('onboarding_complete', False):
-            self.add_new_tab(POST_ONBOARDING_URL, "Home")
-        else:
-            self.add_new_tab(HOME_URL, "Welcome")
+        # Always open home.html first, then Google page
+        self.add_new_tab(HOME_URL, "Welcome")
+        self.add_new_tab(POST_ONBOARDING_URL, "Home")
+        # Switch back to the first tab (home.html)
+        self.tabs.setCurrentIndex(0)
 
         self.gaze_timer = QTimer(self)
         self.gaze_timer.timeout.connect(self.dispatch_gaze_to_active_tab)
@@ -449,6 +450,12 @@ class DysleximMainWindow(QMainWindow):
 
         def do_inject():
             try:
+                current_url = tab.view.url().toString()
+                
+                # Inject CSS for onboarding/settings pages
+                if HOME_URL in current_url or SETTINGS_URL in current_url:
+                    self.inject_css_for_local_pages(tab)
+                
                 # 1. Inject Gaze Handler
                 highlight_color = config.get('highlightColor', 'rgba(255, 200, 0, 0.35)')
                 font = config.get('font', 'Poppins')
@@ -552,17 +559,54 @@ class DysleximMainWindow(QMainWindow):
         """Called by WebChannelHandler after settings are saved."""
         home_url = POST_ONBOARDING_URL # Onboarding is now complete
         
+        # Collect tabs to update (avoid modifying during iteration)
+        tabs_to_update = []
         for i in range(self.tabs.count()):
             tab = self.tabs.widget(i)
-            if not tab:
-                continue
-                
-            current_url = tab.view.url().toString()
-            
-            # Re-point home tabs to new home page
+            if tab:
+                current_url = tab.view.url().toString()
+                tabs_to_update.append((tab, current_url))
+        
+        # Schedule updates with delays to allow proper page cleanup
+        for idx, (tab, current_url) in enumerate(tabs_to_update):
+            delay = 300 * (idx + 1)  # Stagger the updates with longer delay
             if current_url == HOME_URL or current_url == SETTINGS_URL:
-                # Use QTimer to delay navigation to allow page cleanup
-                QTimer.singleShot(100, lambda t=tab: t.view.setUrl(QUrl(home_url)))
+                # Re-point home tabs to new home page
+                QTimer.singleShot(delay, lambda t=tab, url=home_url: self._navigate_tab(t, url))
             else:
                 # Reload other tabs to apply new JS settings
-                QTimer.singleShot(100, lambda t=tab: t.view.reload())
+                QTimer.singleShot(delay, lambda t=tab: self._reload_tab(t))
+    
+    def _navigate_tab(self, tab, url):
+        """Helper to navigate a specific tab."""
+        if tab and tab.view:
+            tab.view.setUrl(QUrl(url))
+    
+    def _reload_tab(self, tab):
+        """Helper to reload a specific tab."""
+        if tab and tab.view:
+            tab.view.reload()
+    
+    def inject_css_for_local_pages(self, tab):
+        """Injects modern.css content directly into local HTML pages."""
+        try:
+            from .config import get_asset_path
+            import os
+            
+            css_path = get_asset_path(os.path.join('web', 'modern.css'))
+            if os.path.exists(css_path):
+                with open(css_path, 'r', encoding='utf-8') as f:
+                    css_content = f.read()
+                
+                # Inject CSS via JavaScript
+                js_inject = f"""
+                (function() {{
+                    var style = document.createElement('style');
+                    style.textContent = `{css_content}`;
+                    document.head.appendChild(style);
+                    console.log('✓ CSS injected successfully');
+                }})();
+                """
+                tab.view.page().runJavaScript(js_inject)
+        except Exception as e:
+            print(f"Error injecting CSS: {e}")

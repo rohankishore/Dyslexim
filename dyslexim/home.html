@@ -4,17 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome to Dyslexim</title>
-    <link rel="stylesheet" href="qrc:///web/modern.css">
+    <!-- CSS will be injected by Python -->
     <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap');
 
-        @font-face {
-            font-family: 'OpenDyslexic';
-            src: url('qrc:///assets/fonts/OpenDyslexic-Regular.otf') format('opentype');
-        }
+        /* OpenDyslexic font removed due to CORS issues - will be loaded separately if needed */
 
         body {
             background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);

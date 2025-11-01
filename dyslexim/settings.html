@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dyslexim Settings</title>
-    <link rel="stylesheet" href="qrc:///web/modern.css">
+    <!-- CSS will be injected by Python -->
     <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
@@ -479,23 +479,39 @@
             if (!pyHandler) return;
             
             try {
-                const settingsJson = pyHandler.loadSettings();
-                const settings = JSON.parse(settingsJson);
-
-                document.getElementById('highlightColor').value = settings.highlightColor || '#ffc800';
-                document.getElementById('font').value = settings.font || 'Poppins';
-                document.getElementById('highlightAlignment').value = settings.highlightAlignment || 'center';
-                document.getElementById('readingMask').checked = settings.readingMask !== false;
-                document.getElementById('ttsHoverTime').value = settings.ttsHoverTime || 1.0;
-                document.getElementById('ttsHoverTimeSlider').value = settings.ttsHoverTime || 1.0;
-                document.getElementById('searchEngine').value = settings.searchEngine || 'Google';
-
-                updateColorName();
-                updateTtsDisplay();
-                console.log("✓ Settings loaded");
+                // WebChannel methods are async, use then() or await
+                const settingsPromise = pyHandler.loadSettings();
+                
+                // Check if it's a Promise (async) or direct return (sync)
+                if (settingsPromise && typeof settingsPromise.then === 'function') {
+                    settingsPromise.then(settingsJson => {
+                        const settings = JSON.parse(settingsJson);
+                        applySettings(settings);
+                    }).catch(err => {
+                        console.error("Error loading settings:", err);
+                    });
+                } else {
+                    // Synchronous return (older Qt)
+                    const settings = JSON.parse(settingsPromise);
+                    applySettings(settings);
+                }
             } catch (err) {
                 console.error("Error loading settings:", err);
             }
+        }
+
+        function applySettings(settings) {
+            document.getElementById('highlightColor').value = settings.highlightColor || '#ffc800';
+            document.getElementById('font').value = settings.font || 'Poppins';
+            document.getElementById('highlightAlignment').value = settings.highlightAlignment || 'center';
+            document.getElementById('readingMask').checked = settings.readingMask !== false;
+            document.getElementById('ttsHoverTime').value = settings.ttsHoverTime || 1.0;
+            document.getElementById('ttsHoverTimeSlider').value = settings.ttsHoverTime || 1.0;
+            document.getElementById('searchEngine').value = settings.searchEngine || 'Google';
+
+            updateColorName();
+            updateTtsDisplay();
+            console.log("✓ Settings loaded");
         }
 
         function saveSettings() {

@@ -41,3 +41,13 @@ class BrowserTab(QWidget):
         self.setLayout(layout)
         
         self.view.setUrl(QUrl(start_url))
+    
+    def __del__(self):
+        """Cleanup when tab is deleted."""
+        try:
+            if hasattr(self, 'page') and self.page:
+                self.page.deleteLater()
+            if hasattr(self, 'profile') and self.profile:
+                self.profile.deleteLater()
+        except:
+            pass

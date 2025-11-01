@@ -1,9 +1,9 @@
 {
-  "highlightColor": "#ffc800",
+  "highlightColor": "#55aaff",
   "onboarding_complete": true,
-  "font": "Poppins",
+  "font": "OpenDyslexic",
   "highlightAlignment": "left",
   "readingMask": false,
-  "ttsHoverTime": 1.0,
-  "searchEngine": "Google"
+  "ttsHoverTime": 7.0,
+  "searchEngine": "Yahoo"
 }
