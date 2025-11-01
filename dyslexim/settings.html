@@ -4,169 +4,551 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dyslexim Settings</title>
+    <link rel="stylesheet" href="qrc:///web/modern.css">
     <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap');
-
-        @font-face {
-            font-family: 'OpenDyslexic';
-            src: url('assets/font/OpenDyslexic-Regular.otf') format('opentype');
-        }
 
         body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #0f1720;
-            color: #e6eef8;
+            background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
+            padding: var(--space-8);
+        }
+
+        .settings-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .settings-header {
+            margin-bottom: var(--space-8);
+        }
+
+        .settings-header h1 {
+            font-size: var(--text-4xl);
+            color: var(--neutral-900);
+            margin-bottom: var(--space-2);
+        }
+
+        .settings-header p {
+            color: var(--neutral-600);
+            font-size: var(--text-lg);
+        }
+
+        .settings-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--space-6);
+            margin-bottom: var(--space-8);
+        }
+
+        .settings-section {
+            background: var(--neutral-50);
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--neutral-200);
+            padding: var(--space-6);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            transition: all var(--transition-fast);
+        }
+
+        .settings-section:hover {
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+            border-color: var(--neutral-300);
+        }
+
+        .section-header {
             display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            margin-bottom: var(--space-6);
+            padding-bottom: var(--space-6);
+            border-bottom: 2px solid var(--neutral-100);
+        }
+
+        .section-icon {
+            font-size: var(--text-3xl);
+            width: 2.5rem;
+            height: 2.5rem;
+            display: flex;
+            align-items: center;
             justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            text-align: center;
         }
 
-        .container {
-            max-width: 600px;
-            padding: 40px;
-            background-color: #1e293b;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        }
-
-        h1 {
-            font-weight: 700;
-            font-size: 2.5em;
-            margin-bottom: 20px;
-            color: #ffffff;
-        }
-
-        .settings {
-            margin-bottom: 30px;
-            text-align: left;
-        }
-
-        .setting {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        label {
+        .section-title {
+            font-size: var(--text-xl);
             font-weight: 600;
-            font-size: 1.2em;
+            color: var(--neutral-900);
+        }
+
+        .section-subtitle {
+            font-size: var(--text-sm);
+            color: var(--neutral-500);
+        }
+
+        .setting-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-4) 0;
+            gap: var(--space-4);
+        }
+
+        .setting-item:not(:last-child) {
+            border-bottom: 1px solid var(--neutral-100);
+        }
+
+        .setting-label-group {
+            flex: 1;
+        }
+
+        .setting-label {
+            font-weight: 600;
+            color: var(--neutral-900);
+            font-size: var(--text-base);
+            margin-bottom: var(--space-1);
+        }
+
+        .setting-description {
+            font-size: var(--text-sm);
+            color: var(--neutral-500);
+        }
+
+        .setting-control {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            min-width: 200px;
         }
 
         input[type="color"] {
-            -webkit-appearance: none;
-            width: 50px;
-            height: 50px;
-            border: none;
+            width: 3.5rem;
+            height: 3.5rem;
+            border: 2px solid var(--neutral-300);
+            border-radius: var(--radius-lg);
             cursor: pointer;
+            transition: all var(--transition-fast);
+            background: var(--neutral-100);
+        }
+
+        input[type="color"]:hover {
+            border-color: var(--primary-500);
+            box-shadow: 0 0 15px rgba(10, 132, 255, 0.3);
+        }
+
+        select,
+        input[type="number"] {
+            padding: var(--space-3) var(--space-4);
+            border: 1px solid var(--neutral-300);
+            border-radius: var(--radius-lg);
+            font-family: var(--font-family-base);
+            font-size: var(--text-base);
+            color: var(--neutral-900);
+            background: var(--neutral-100);
+            transition: all var(--transition-fast);
+            min-width: 150px;
+        }
+
+        select:focus,
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.2);
+            background: var(--neutral-50);
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            cursor: pointer;
+        }
+
+        input[type="checkbox"] {
+            width: 1.25rem;
+            height: 1.25rem;
+            cursor: pointer;
+            accent-color: var(--primary-500);
+        }
+
+        .slider {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            min-width: 200px;
+        }
+
+        input[type="range"] {
+            flex: 1;
+            min-width: 100px;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--neutral-200);
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 1.25rem;
+            height: 1.25rem;
             border-radius: 50%;
-            padding: 0;
-            background-color: transparent;
+            background: var(--primary-500);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            box-shadow: var(--shadow-md);
         }
 
-        input[type="color"]::-webkit-color-swatch-wrapper {
-            padding: 0;
+        input[type="range"]::-webkit-slider-thumb:hover {
+            background: var(--primary-600);
+            box-shadow: 0 0 0 4px rgba(10, 132, 255, 0.2);
         }
 
-        input[type="color"]::-webkit-color-swatch {
-            border: 2px solid #4a5568;
+        input[type="range"]::-moz-range-thumb {
+            width: 1.25rem;
+            height: 1.25rem;
             border-radius: 50%;
+            background: var(--primary-500);
+            cursor: pointer;
+            border: none;
+            transition: all var(--transition-fast);
+            box-shadow: var(--shadow-md);
         }
 
-        select {
-            background: #0b1220;
-            color: #e6eef8;
-            border: 1px solid #1f2a37;
-            padding: 10px;
-            border-radius: 6px;
-            font-family: 'Poppins', sans-serif;
-            font-size: 1em;
+        input[type="range"]::-moz-range-thumb:hover {
+            background: var(--primary-600);
+            box-shadow: 0 0 0 4px rgba(10, 132, 255, 0.2);
         }
 
-        .button {
-            display: inline-block;
-            padding: 15px 30px;
-            background-color: #0f9d58;
-            color: #ffffff;
-            text-decoration: none;
+        .value-display {
+            background: var(--neutral-100);
+            padding: var(--space-2) var(--space-3);
+            border-radius: var(--radius-md);
+            min-width: 50px;
+            text-align: center;
             font-weight: 600;
-            border-radius: 8px;
-            transition: background-color 0.3s ease;
+            font-size: var(--text-sm);
+            color: var(--neutral-900);
         }
 
-        .button:hover {
-            background-color: #0c7c46;
+        .button-group {
+            display: flex;
+            gap: var(--space-4);
+            margin-top: var(--space-8);
+            justify-content: flex-end;
+        }
+
+        .color-name {
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+            font-weight: 500;
+        }
+
+        .notification {
+            position: fixed;
+            bottom: var(--space-6);
+            right: var(--space-6);
+            background: var(--success-500);
+            color: white;
+            padding: var(--space-4) var(--space-6);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            z-index: 1000;
+            animation: slideInRight var(--transition-base);
+            display: none;
+        }
+
+        .notification.show {
+            display: block;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(2rem);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .setting-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .setting-control {
+                width: 100%;
+            }
+
+            select,
+            input[type="number"] {
+                min-width: 100%;
+            }
+
+            .button-group {
+                flex-direction: column-reverse;
+            }
+
+            .btn {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Settings</h1>
+    <div class="settings-container">
+        <div class="settings-header">
+            <h1>Settings</h1>
+            <p>Customize your Dyslexim experience</p>
+        </div>
 
-        <div class="settings">
-            <div class="setting">
-                <label for="highlightColor">Highlight Color</label>
-                <input type="color" id="highlightColor" value="#ffc800">
+        <!-- Visual Settings Section -->
+        <div class="settings-grid">
+            <div class="settings-section">
+                <div class="section-header">
+                    <div class="section-icon">🎨</div>
+                    <div>
+                        <div class="section-title">Visual Preferences</div>
+                        <div class="section-subtitle">Customize colors and appearance</div>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-label-group">
+                        <div class="setting-label">Highlight Color</div>
+                        <div class="setting-description">Choose the color used to highlight text</div>
+                    </div>
+                    <div class="setting-control">
+                        <input type="color" id="highlightColor" value="#ffc800" onchange="updateColorName()">
+                        <div class="color-name" id="colorName">Golden Yellow</div>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-label-group">
+                        <div class="setting-label">Text Font</div>
+                        <div class="setting-description">Select your preferred font family</div>
+                    </div>
+                    <div class="setting-control">
+                        <select id="font" style="min-width: 200px;">
+                            <option value="Poppins">Poppins (Modern)</option>
+                            <option value="Roboto">Roboto (Clean)</option>
+                            <option value="Open Sans">Open Sans (Friendly)</option>
+                            <option value="OpenDyslexic">OpenDyslexic (Dyslexia-friendly)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-label-group">
+                        <div class="setting-label">Highlight Alignment</div>
+                        <div class="setting-description">Position of the highlight on the text</div>
+                    </div>
+                    <div class="setting-control">
+                        <select id="highlightAlignment" style="min-width: 200px;">
+                            <option value="left">Left-aligned</option>
+                            <option value="center">Center-aligned</option>
+                            <option value="right">Right-aligned</option>
+                        </select>
+                    </div>
+                </div>
             </div>
-            <div class="setting">
-                <label for="font">Font</label>
-                <select id="font">
-                    <option value="Poppins">Poppins</option>
-                    <option value="Roboto">Roboto</option>
-                    <option value="Open Sans">Open Sans</option>
-                    <option value="OpenDyslexic">OpenDyslexic</option>
-                </select>
+
+            <!-- Reading Assistance Section -->
+            <div class="settings-section">
+                <div class="section-header">
+                    <div class="section-icon">📖</div>
+                    <div>
+                        <div class="section-title">Reading Assistance</div>
+                        <div class="section-subtitle">Features to help your reading</div>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-label-group">
+                        <div class="setting-label">Reading Mask</div>
+                        <div class="setting-description">Highlight the current reading line to reduce distractions</div>
+                    </div>
+                    <div class="setting-control">
+                        <div class="checkbox-container">
+                            <input type="checkbox" id="readingMask" checked>
+                            <span style="color: var(--neutral-700); font-weight: 500;">Enabled</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-label-group">
+                        <div class="setting-label">TTS Hover Time</div>
+                        <div class="setting-description">Delay before text-to-speech activation (in seconds)</div>
+                    </div>
+                    <div class="setting-control">
+                        <div class="slider">
+                            <input type="range" id="ttsHoverTimeSlider" min="0.5" max="5" step="0.1" value="1.0" 
+                                   onchange="updateTtsDisplay()">
+                            <div class="value-display"><span id="ttsValue">1.0</span>s</div>
+                        </div>
+                    </div>
+                    <input type="number" id="ttsHoverTime" min="0.5" max="5" step="0.1" value="1.0" 
+                           style="display: none;" onchange="syncTtsSlider()">
+                </div>
             </div>
-            <div class="setting">
-                <label for="highlightAlignment">Highlight Alignment</label>
-                <select id="highlightAlignment">
-                    <option value="left">Left</option>
-                    <option value="center">Center</option>
-                    <option value="right">Right</option>
-                </select>
-            </div>
-            <div class="setting">
-                <label for="readingMask">Reading Mask</label>
-                <input type="checkbox" id="readingMask" checked>
-            </div>
-            <div class="setting">
-                <label for="ttsHoverTime">TTS Hover Time (seconds)</label>
-                <input type="number" id="ttsHoverTime" min="0.5" max="5" step="0.1" value="1.0">
-            </div>
-            <div class="setting">
-                <label for="searchEngine">Search Engine</label>
-                <select id="searchEngine">
-                    <option value="Google">Google</option>
-                    <option value="Bing">Bing</option>
-                    <option value="DuckDuckGo">DuckDuckGo</option>
-                    <option value="Yahoo">Yahoo</option>
-                    <option value="Brave">Brave</option>
-                </select>
+
+            <!-- Search & Browser Section -->
+            <div class="settings-section">
+                <div class="section-header">
+                    <div class="section-icon">🔍</div>
+                    <div>
+                        <div class="section-title">Search & Browser</div>
+                        <div class="section-subtitle">Default search and browsing options</div>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-label-group">
+                        <div class="setting-label">Default Search Engine</div>
+                        <div class="setting-description">Choose your preferred search provider</div>
+                    </div>
+                    <div class="setting-control">
+                        <select id="searchEngine" style="min-width: 200px;">
+                            <option value="Google">Google</option>
+                            <option value="Bing">Bing</option>
+                            <option value="DuckDuckGo">DuckDuckGo</option>
+                            <option value="Yahoo">Yahoo</option>
+                            <option value="Brave">Brave Search</option>
+                        </select>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <a href="#" class="button" onclick="saveSettings()">Save Settings</a>
+        <div class="button-group">
+            <button class="btn btn-secondary" onclick="resetSettings()">Reset to Defaults</button>
+            <button class="btn btn-primary" onclick="saveSettings()">Save Changes</button>
+        </div>
     </div>
 
+    <div class="notification" id="notification">✓ Settings saved successfully!</div>
+
     <script>
+        let pyHandler = null;
+
+        // Initialize WebChannel
         new QWebChannel(qt.webChannelTransport, function (channel) {
-            window.handler = channel.objects.handler;
+            try {
+                pyHandler = channel.objects.handler;
+                console.log("✓ Settings: WebChannel connected");
+                loadSettings();
+            } catch (err) {
+                console.error("✗ WebChannel error:", err);
+            }
         });
 
-        function loadSettings(settings) {
-            document.getElementById('highlightColor').value = settings.highlightColor;
-            document.getElementById('font').value = settings.font;
-            document.getElementById('highlightAlignment').value = settings.highlightAlignment;
-            document.getElementById('readingMask').checked = settings.readingMask;
-            document.getElementById('ttsHoverTime').value = settings.ttsHoverTime;
-            document.getElementById('searchEngine').value = settings.searchEngine;
+        const colorMap = {
+            '#ffc800': 'Golden Yellow',
+            '#ffff00': 'Bright Yellow',
+            '#00d4ff': 'Cyan',
+            '#ff6b6b': 'Red',
+            '#51cf66': 'Green',
+            '#ff922b': 'Orange',
+            '#cc5de8': 'Purple'
+        };
+
+        function updateColorName() {
+            const color = document.getElementById('highlightColor').value;
+            const name = colorMap[color] || 'Custom Color';
+            document.getElementById('colorName').textContent = name;
         }
+
+        function updateTtsDisplay() {
+            const value = document.getElementById('ttsHoverTimeSlider').value;
+            document.getElementById('ttsValue').textContent = parseFloat(value).toFixed(1);
+            document.getElementById('ttsHoverTime').value = value;
+        }
+
+        function syncTtsSlider() {
+            const value = document.getElementById('ttsHoverTime').value;
+            document.getElementById('ttsHoverTimeSlider').value = value;
+            updateTtsDisplay();
+        }
+
+        function loadSettings() {
+            if (!pyHandler) return;
+            
+            try {
+                const settingsJson = pyHandler.loadSettings();
+                const settings = JSON.parse(settingsJson);
+
+                document.getElementById('highlightColor').value = settings.highlightColor || '#ffc800';
+                document.getElementById('font').value = settings.font || 'Poppins';
+                document.getElementById('highlightAlignment').value = settings.highlightAlignment || 'center';
+                document.getElementById('readingMask').checked = settings.readingMask !== false;
+                document.getElementById('ttsHoverTime').value = settings.ttsHoverTime || 1.0;
+                document.getElementById('ttsHoverTimeSlider').value = settings.ttsHoverTime || 1.0;
+                document.getElementById('searchEngine').value = settings.searchEngine || 'Google';
+
+                updateColorName();
+                updateTtsDisplay();
+                console.log("✓ Settings loaded");
+            } catch (err) {
+                console.error("Error loading settings:", err);
+            }
+        }
+
+        function saveSettings() {
+            if (!pyHandler || typeof pyHandler.saveSettings !== 'function') {
+                alert("Error: Could not connect to app");
+                return;
+            }
+
+            try {
+                const color = document.getElementById('highlightColor').value;
+                const font = document.getElementById('font').value;
+                const alignment = document.getElementById('highlightAlignment').value;
+                const readingMask = document.getElementById('readingMask').checked;
+                const ttsHoverTime = parseFloat(document.getElementById('ttsHoverTime').value) || 1.0;
+                const searchEngine = document.getElementById('searchEngine').value;
+
+                pyHandler.saveSettings(color, font, alignment, readingMask, ttsHoverTime, searchEngine);
+                
+                showNotification("Settings saved successfully!");
+                console.log("✓ Settings saved");
+            } catch (err) {
+                console.error("Error saving settings:", err);
+                alert("Error: Could not save settings");
+            }
+        }
+
+        function resetSettings() {
+            if (confirm('Are you sure you want to reset all settings to defaults?')) {
+                document.getElementById('highlightColor').value = '#ffc800';
+                document.getElementById('font').value = 'Poppins';
+                document.getElementById('highlightAlignment').value = 'center';
+                document.getElementById('readingMask').checked = true;
+                document.getElementById('ttsHoverTime').value = '1.0';
+                document.getElementById('ttsHoverTimeSlider').value = '1.0';
+                document.getElementById('searchEngine').value = 'Google';
+                
+                updateColorName();
+                updateTtsDisplay();
+                saveSettings();
+            }
+        }
+
+        function showNotification(message) {
+            const notif = document.getElementById('notification');
+            notif.textContent = message;
+            notif.classList.add('show');
+            setTimeout(() => {
+                notif.classList.remove('show');
+            }, 3000);
+        }
+
+        // Initialize on load
+        console.log("Settings page loaded");
     </script>
 </body>
 </html>

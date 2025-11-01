@@ -106,16 +106,16 @@ class DysleximMainWindow(QMainWindow):
         self.set_stylesheet()
 
     def load_icons(self):
-        """Loads and stores custom SVG icons from hardcoded data."""
-        self.back_icon = self._create_icon_from_svg('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>')
-        self.fwd_icon = self._create_icon_from_svg('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>')
-        self.reload_icon = self._create_icon_from_svg('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rotate-cw-icon lucide-rotate-cw"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>')
-        self.home_icon = self._create_icon_from_svg('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-house-icon lucide-house"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>')
-        self.settings_icon = self._create_icon_from_svg('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings-icon lucide-settings"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></svg>')
-        self.gaze_on_icon = self._create_icon_from_svg('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye-icon lucide-eye"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>')
-        self.gaze_off_icon = self._create_icon_from_svg('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye-off-icon lucide-eye-off"><path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"/><path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"/><path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"/><path d="m2 2 20 20"/></svg>')
-        self.focus_icon = self._create_icon_from_svg('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-target-icon lucide-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>')
-        self.plus_icon = self._create_icon_from_svg('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus-icon lucide-plus"><path d="M5 12h14"/><path d="M12 5v14"/></svg>')
+        """Loads and stores custom SVG icons from hardcoded data with white color for dark theme."""
+        self.back_icon = self._create_icon_from_svg('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#c9d1d9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>')
+        self.fwd_icon = self._create_icon_from_svg('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#c9d1d9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>')
+        self.reload_icon = self._create_icon_from_svg('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#c9d1d9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>')
+        self.home_icon = self._create_icon_from_svg('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#c9d1d9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>')
+        self.settings_icon = self._create_icon_from_svg('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#c9d1d9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></svg>')
+        self.gaze_on_icon = self._create_icon_from_svg('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#c9d1d9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>')
+        self.gaze_off_icon = self._create_icon_from_svg('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#c9d1d9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"/><path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"/><path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"/><path d="m2 2 20 20"/></svg>')
+        self.focus_icon = self._create_icon_from_svg('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#c9d1d9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>')
+        self.plus_icon = self._create_icon_from_svg('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#c9d1d9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>')
 
     def _create_icon_from_svg(self, svg_data):
         """Creates a QIcon from SVG data."""
@@ -125,104 +125,177 @@ class DysleximMainWindow(QMainWindow):
 
 
     def set_stylesheet(self):
-        """Sets the new modern light-mode stylesheet."""
+        """Sets the modern dark-mode stylesheet based on design tokens."""
         self.setStyleSheet("""
+            /* --- Modern Design System (Edge-inspired Dark Theme) --- */
+            
             /* --- Base Window --- */
             QMainWindow { 
-                background: #f8f8fa; /* Soft, modern light grey */
+                background: #0d1117;
             }
             QStatusBar {
-                color: #555555; /* Readable dark grey */
+                background: #161b22;
+                border-top: 1px solid #30363d;
+                color: #8b949e;
+                padding: 4px 8px;
+                font-size: 12px;
             }
 
             /* --- Toolbar --- */
             QToolBar { 
-                background: #f8f8fa;
-                border-bottom: 1px solid #dcdcdc; /* Subtle border */
-                spacing: 10px; 
-                padding: 10px 15px;
+                background: #0d1117;
+                border-bottom: 1px solid #30363d;
+                spacing: 4px; 
+                padding: 8px 12px;
+                margin: 0px;
             }
             
-            /* --- URL Bar --- */
+            /* --- URL Bar (Address Bar) --- */
             QLineEdit { 
-                background: #ffffff; /* Pure white input */
-                color: #1d1d1f; /* Dark text */
-                border: 1px solid #dcdcdc; 
-                padding: 10px 15px; 
-                border-radius: 10px; /* More rounded */
-                font-size: 15px;
+                background: #161b22;
+                color: #c9d1d9;
+                border: 1px solid #30363d;
+                padding: 10px 14px; 
+                border-radius: 8px;
+                font-size: 13px;
+                selection-background-color: #0a84ff;
+                selection-color: #ffffff;
+                margin: 0px 2px;
             }
             QLineEdit:focus {
-                border: 1px solid #0a84ff; /* Apple blue accent */
+                border: 2px solid #0a84ff;
+                background: #1f2937;
+            }
+            QLineEdit:hover {
+                border: 1px solid #424a53;
             }
             
-            /* --- Tab Bar --- */
+            /* --- Tab Widget --- */
             QTabWidget::pane { 
-                /* The content area */
-                border-top: 1px solid #dcdcdc; 
-                background: #f8f8fa; /* Match window */
+                border-top: 1px solid #30363d;
+                background: #0d1117;
+                margin-top: -1px;
             }
             QTabBar {
-                /* The bar itself */
-                background: #f8f8fa;
-                border-bottom: 1px solid #dcdcdc;
+                background: #0d1117;
+                border-bottom: 1px solid #30363d;
             }
             QTabBar::tab { 
-                background: #ececec; /* Recessed inactive tabs */
-                color: #555555; /* Muted text */
-                padding: 12px 18px; 
-                border: 1px solid #dcdcdc;
+                background: #161b22;
+                color: #8b949e;
+                padding: 10px 16px; 
+                border: 1px solid #30363d;
                 border-bottom: none; 
                 border-top-left-radius: 8px; 
                 border-top-right-radius: 8px;
-                margin-right: 2px; /* Adds a little space */
+                margin-right: 2px;
+                font-weight: 500;
+                font-size: 13px;
             }
             QTabBar::tab:hover {
-                background: #f2f2f2; /* Lighter hover */
+                background: #1f2937;
+                color: #c9d1d9;
             }
             QTabBar::tab:selected { 
-                background: #f8f8fa; /* Blends with window */
-                color: #1d1d1f; /* Active, dark text */
-                border-bottom: 1px solid #f8f8fa; /* Hides bottom border */
+                background: #0d1117;
+                color: #f0f6fc;
+                border-bottom: 2px solid #0d1117;
+                font-weight: 600;
+            }
+            QTabBar::close-button {
+                margin-left: 6px;
+            }
+            QTabBar::close-button:hover {
+                background: #30363d;
+                border-radius: 3px;
+            }
+            
+            /* --- Tab Bar Scrollers --- */
+            QTabBar QToolButton {
+                background: transparent;
+                border: none;
+                padding: 4px;
+                border-radius: 4px;
+            }
+            QTabBar QToolButton:hover {
+                background: #1f2937;
             }
             
             /* --- New Tab Button in Corner --- */
             QTabBar::corner-widget {
-                padding-right: 10px;
-                padding-top: 8px;
+                padding-right: 8px;
+                padding-top: 2px;
             }
             QPushButton#newtab_corner_btn {
                 background: transparent;
                 border: none;
-                padding: 5px;
+                padding: 6px;
                 border-radius: 6px;
+                color: #8b949e;
             }
             QPushButton#newtab_corner_btn:hover {
-                background: #e8e8e8; /* Light grey hover */
+                background: #1f2937;
+                color: #c9d1d9;
+            }
+            QPushButton#newtab_corner_btn:pressed {
+                background: #30363d;
             }
             
             /* --- Toolbar Buttons (Icons) --- */
             QToolBar > QPushButton {
                 background: transparent;
                 border: none;
-                padding: 6px;
+                padding: 6px 8px;
                 border-radius: 6px;
+                color: #8b949e;
             }
             QToolBar > QPushButton:hover {
-                background: #e8e8e8; /* Light grey hover */
+                background: #1f2937;
+                color: #c9d1d9;
             }
             QToolBar > QPushButton:pressed {
-                background: #dcdcdc; /* Darker grey press */
+                background: #30363d;
             }
             QToolBar > QPushButton:checked {
-                /* For 'Focus' button */
-                background: #0a84ff; /* Blue accent */
-                /* NOTE: Your _create_icon_from_svg method will keep the
-                   icon black. For a white icon, you'd need to
-                   use a different rendering method (like QSvgRenderer)
-                   or load a separate white icon. */
+                background: #0a84ff;
+                color: #ffffff;
+            }
+            
+            /* --- Scrollbars --- */
+            QScrollBar:vertical {
+                background: #0d1117;
+                width: 12px;
+                border: none;
+            }
+            QScrollBar::handle:vertical {
+                background: #30363d;
+                border-radius: 6px;
+                min-height: 40px;
+            }
+            QScrollBar::handle:vertical:hover {
+                background: #424a53;
+            }
+            
+            QScrollBar:horizontal {
+                background: #0d1117;
+                height: 12px;
+                border: none;
+            }
+            QScrollBar::handle:horizontal {
+                background: #30363d;
+                border-radius: 6px;
+                min-width: 40px;
+            }
+            QScrollBar::handle:horizontal:hover {
+                background: #424a53;
+            }
+            
+            QScrollBar::sub-line, QScrollBar::add-line {
+                border: none;
+                background: none;
             }
         """)
+
 
     def add_toolbar_items(self):
         """Creates and adds all items to the main toolbar."""
@@ -247,8 +320,7 @@ class DysleximMainWindow(QMainWindow):
         # Home
         self.act_home = QPushButton(self.home_icon, "")
         self.act_home.setToolTip("Home")
-        home_url = HOME_URL if not config.get('onboarding_complete') else POST_ONBOARDING_URL
-        self.act_home.clicked.connect(lambda: self.navigate_to(home_url))
+        self.act_home.clicked.connect(self.navigate_home)
         self.toolbar.addWidget(self.act_home)
 
         # Address bar
@@ -328,6 +400,11 @@ class DysleximMainWindow(QMainWindow):
             q = QUrl.fromUserInput(url_text)
             
         view.setUrl(q)
+
+    def navigate_home(self):
+        """Navigate to the home page."""
+        home_url = HOME_URL if not config.get('onboarding_complete') else POST_ONBOARDING_URL
+        self.navigate_to(home_url)
 
     # --- NEW: Helper for home page search ---
     def navigate_to_search(self, term):
@@ -477,11 +554,15 @@ class DysleximMainWindow(QMainWindow):
         
         for i in range(self.tabs.count()):
             tab = self.tabs.widget(i)
+            if not tab:
+                continue
+                
             current_url = tab.view.url().toString()
             
             # Re-point home tabs to new home page
             if current_url == HOME_URL or current_url == SETTINGS_URL:
-                tab.view.setUrl(QUrl(home_url))
+                # Use QTimer to delay navigation to allow page cleanup
+                QTimer.singleShot(100, lambda t=tab: t.view.setUrl(QUrl(home_url)))
             else:
                 # Reload other tabs to apply new JS settings
-                tab.view.reload()
+                QTimer.singleShot(100, lambda t=tab: t.view.reload())

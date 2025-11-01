@@ -1,15 +1,21 @@
 <!DOCTYPE RCC>
 <RCC version="1.0">
 <qresource prefix="/">
-    <file alias="web/onboarding.html">web/onboarding.html</file>
-    <file alias="web/onboarding.css">web/onboarding.css</file>
-    <file alias="web/onboarding.js">web/onboarding.js</file>
-    <file alias="web/common.css">web/common.css</file>
+    <!-- Design Framework -->
+    <file alias="web/modern.css">web/modern.css</file>
     
+    <!-- Onboarding (Home Setup Wizard) -->
+    <file alias="home.html">home.html</file>
+    
+    <!-- Home Page -->
     <file alias="web/home.html">web/home.html</file>
     <file alias="web/home.css">web/home.css</file>
     <file alias="web/home.js">web/home.js</file>
     
+    <!-- Settings -->
+    <file alias="settings.html">settings.html</file>
+    
+    <!-- Icons -->
     <file alias="icons/arrow-left.svg">resources/icons/arrow-left.svg</file>
     <file alias="icons/arrow-right.svg">resources/icons/arrow-right.svg</file>
     <file alias="icons/rotate-cw.svg">resources/icons/rotate-cw.svg</file>
@@ -20,6 +26,7 @@
     <file alias="icons/target.svg">resources/icons/target.svg</file>
     <file alias="icons/plus.svg">resources/icons/plus.svg</file>
     
+    <!-- Images -->
     <file alias="images/bg.jpg">resources/images/bg.jpg</file>
 </qresource>
 </RCC>
