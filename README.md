@@ -8,6 +8,12 @@
 
 ---
 
+<img width="1814" height="1060" alt="image" src="https://github.com/user-attachments/assets/582d9412-931d-4b65-bea7-252929ec9b57" />
+<img width="1766" height="1042" alt="image" src="https://github.com/user-attachments/assets/0ba84786-fe97-4a9f-a9f6-9b469ab84ae1" />
+
+
+---
+
 ## The Problem
 
 The modern web is a sea of text. For the 10-15% of the population with dyslexia, navigating this sea can be a daily struggle. Crowded text, distracting layouts, and difficult-to-read fonts can turn a simple browsing session into a frustrating and overwhelming experience.
